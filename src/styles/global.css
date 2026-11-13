@@ -224,7 +224,10 @@ img { max-width: 100%; }
 .marquee:hover .marquee-track { animation-play-state: paused; }
 @keyframes marquee { to { transform: translateX(-50%); } }
 
-/* ---------- Reveal fallback when AOS absent ---------- */
+/* ---------- Scroll reveals (GSAP) — hidden until animated in ---------- */
+.gsap-ready [data-aos] { opacity: 0; visibility: hidden; }
+
+/* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
   .marquee-track { animation: none; }

@@ -64,14 +64,6 @@ export function initMotion() {
     });
   });
 
-  // ---- A touch of depth: section headings drift slightly as they pass ----
-  gsap.utils.toArray<HTMLElement>('section h2.title-lg').forEach((h) => {
-    gsap.fromTo(h, { yPercent: 6 }, {
-      yPercent: -6, ease: 'none',
-      scrollTrigger: { trigger: h, start: 'top bottom', end: 'bottom top', scrub: 0.6 },
-    });
-  });
-
   root.classList.add('motion-on');
   window.addEventListener('load', () => ScrollTrigger.refresh());
 }

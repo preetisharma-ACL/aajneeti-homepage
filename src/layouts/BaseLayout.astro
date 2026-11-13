@@ -37,7 +37,11 @@ const {
     />
     <!-- Hide reveal targets before first paint (only when JS runs and motion is allowed) -->
     <script is:inline>
-      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('gsap-ready');
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.classList.add('gsap-ready');
+        // Failsafe: never leave content hidden if the motion script fails to load
+        setTimeout(() => { if (!document.documentElement.classList.contains('motion-on')) document.documentElement.classList.remove('gsap-ready'); }, 3000);
+      }
     </script>
   </head>
   <body>
