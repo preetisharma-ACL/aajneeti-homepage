@@ -1,0 +1,191 @@
+---
+import { dashboardFeatures, links } from '../data/site.js';
+
+const cards = [
+  {
+    title: 'AAJneeti CRM',
+    tags: ['Real-time leads', 'Lead tagging', 'QC checks'],
+    img: '/images/crm-login.webp',
+    alt: 'The AAJneeti CRM sign-in screen',
+    heading: 'A CRM your sales team will actually use',
+    text: 'Every enquiry lands here the moment the form is filled. Your team tags each lead after the call, and our QC team uses those tags for replacements.',
+    features: ['Leads in real time', 'Tagged by campaign', 'QC-checked replacements', 'Fake leads auto-replaced'],
+    primary: { label: 'Open the CRM', href: links.crm },
+  },
+  {
+    title: 'Reporting Dashboard',
+    tags: ['Spend', 'Cost per lead', 'Alerts'],
+    img: '/images/dashboard-login.webp',
+    alt: 'The AAJneeti reporting dashboard sign-in screen',
+    heading: 'One login. Your whole campaign.',
+    text: 'A monthly PDF never answered the questions clients ask. Log in any time, from any device, and see your projects and nothing else.',
+    features: ['Leads at a glance', 'Cost per lead by project', 'Billing you can check', 'Same-day alerts'],
+    primary: { label: 'Open the dashboard', href: links.dashboard },
+  },
+];
+---
+
+<section class="platform" aria-labelledby="pf-title">
+  <div class="container-hoe">
+    <div class="text-center mx-auto pf-head" data-aos="fade-up">
+      <p class="eyebrow centered mb-3">Your CRM and dashboard</p>
+      <h2 id="pf-title" class="title-lg text-white">
+        Every lead and every rupee, <span class="text-red">on your screen as it happens.</span>
+      </h2>
+      <p class="pf-lede">
+        Two tools come free with every campaign, both built in-house: a CRM your sales team works from every day, and a
+        reporting dashboard, so you never have to ask where the budget went.
+      </p>
+    </div>
+
+    <div class="stack" data-stack>
+      {cards.map((c, i) => (
+        <article class="stack-card" style={`--i:${i}`} data-stack-card>
+          <div class="stack-inner">
+            <div class="row g-4 g-xl-5 align-items-center">
+              <!-- Screenshot in a premium gradient-edged frame -->
+              <div class="col-lg-6">
+                <figure class="sc-frame m-0">
+                  <img src={c.img} alt={c.alt} width="1700" height="915" loading="lazy" />
+                </figure>
+              </div>
+
+              <div class="col-lg-6">
+                <div class="d-flex align-items-center justify-content-between gap-3 mb-2">
+                  <span class="sc-num">0{i + 1}</span>
+                  <div class="d-flex flex-wrap justify-content-end gap-2">
+                    {c.tags.map((t) => <span class="sc-tag">{t}</span>)}
+                  </div>
+                </div>
+                <h3 class="sc-title">{c.title}</h3>
+                <p class="sc-heading">{c.heading}</p>
+                <p class="sc-text">{c.text}</p>
+                <ul class="sc-list list-unstyled">
+                  {c.features.map((f) => <li><i class="bi bi-plus-lg"></i>{f}</li>)}
+                </ul>
+                <div class="sc-cta">
+                  <span class="sc-price">Free with every campaign</span>
+                  <a href={c.primary.href} class="sc-btn">{c.primary.label} <i class="bi bi-arrow-up-right"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <!-- Six dashboard feature cards (restored) -->
+    <div class="row g-3 g-lg-4 ftiles">
+      {dashboardFeatures.map((f, i) => (
+        <div class="col-sm-6 col-lg-4" data-aos="fade-up" data-aos-delay={String((i % 3) * 100)}>
+          <div class="card-dark ftile">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <span class="ftile-icon"><i class={`bi ${f.icon}`}></i></span>
+              <span class="ftile-num">0{i + 1}</span>
+            </div>
+            <h4 class="fs-6 text-white mb-2">{f.title}</h4>
+            <p class="ftile-text">{f.text}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  // Smooth stacking: while the next card slides over a pinned card, the pinned card eases back (scale + dim).
+  // Values are eased toward their target every frame (lerp), so motion stays smooth even with jumpy wheel scrolling.
+  const root = document.querySelector<HTMLElement>('[data-stack]');
+  const cards = root ? [...root.querySelectorAll<HTMLElement>('[data-stack-card]')] : [];
+  const inners = cards.map((c) => c.querySelector<HTMLElement>('.stack-inner')!);
+  const mq = window.matchMedia('(min-width: 992px) and (min-height: 700px)');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const current = cards.map(() => 0);
+  let raf = 0;
+
+  const target = (i: number) => {
+    const next = cards[i + 1];
+    if (!mq.matches || reduce || !next) return 0;
+    const pinTop = parseFloat(getComputedStyle(cards[i]).top) || 0;
+    const dist = next.getBoundingClientRect().top - pinTop;
+    return Math.min(1, Math.max(0, 1 - dist / cards[i].offsetHeight));
+  };
+
+  const frame = () => {
+    let moving = false;
+    cards.forEach((_, i) => {
+      const t = target(i);
+      const d = t - current[i];
+      current[i] = Math.abs(d) < 0.001 ? t : current[i] + d * 0.16;
+      if (current[i] !== t) moving = true;
+      const p = current[i];
+      inners[i].style.transform = p ? `scale(${1 - p * 0.07}) translateY(${-p * 12}px)` : '';
+      inners[i].style.opacity = p ? String(1 - p * 0.55) : '';
+    });
+    raf = moving ? requestAnimationFrame(frame) : 0;
+  };
+  const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
+  window.addEventListener('scroll', kick, { passive: true });
+  window.addEventListener('resize', kick);
+  kick();
+</script>
+
+<style>
+  .platform { background: var(--navy); color: var(--slate-50); padding-block: clamp(4rem, 8vw, 6rem); }
+  .pf-head { max-width: 48rem; margin-bottom: clamp(2.5rem, 5vw, 3.5rem); }
+  .pf-lede { color: var(--slate-300); font-weight: 300; font-size: clamp(1.05rem, 1.4vw, 1.2rem); line-height: 1.65; margin: 0; }
+
+  /* Stack */
+  .stack { display: flex; flex-direction: column; gap: 2rem; }
+  /* Cards are not highlighted: same background as the section (opaque, so the next card covers the previous one) */
+  .stack-inner {
+    background: var(--navy);
+    padding-block: clamp(1.25rem, 2.5vw, 2rem);
+    transform-origin: center top;
+    will-change: transform, opacity;
+  }
+  .stack { display: flex; flex-direction: column; gap: 1.5rem; }
+  @media (min-width: 992px) and (min-height: 700px) {
+    .stack { gap: 2rem; padding-bottom: 0; }
+    .stack-card { position: sticky; top: calc(var(--header-h) + 1rem); }
+  }
+
+  /* Premium frame: thin coral→slate gradient edge + soft warm glow */
+  .sc-frame {
+    position: relative;
+    padding: 6px;
+    border-radius: calc(var(--radius-lg) + 2px);
+    background: linear-gradient(135deg, rgb(255 85 85 / .75) 0%, rgb(162 28 175 / .35) 35%, rgb(148 163 184 / .18) 70%, rgb(255 255 255 / .28) 100%);
+    box-shadow: 0 30px 60px -30px rgb(0 0 0 / .8), 0 0 60px -20px rgb(255 85 85 / .35);
+  }
+  .sc-frame img { display: block; width: 100%; height: auto; border-radius: var(--radius-lg); background: var(--navy); }
+
+  .sc-num { font-family: var(--font-display); font-weight: 600; font-size: .8rem; letter-spacing: .1em; color: var(--red); }
+  .sc-tag { font-size: .7rem; font-weight: 500; color: var(--slate-300); background: rgb(255 255 255 / .07); border-radius: 999px; padding: .3rem .7rem; }
+  .sc-title { color: #fff; font-size: clamp(1.35rem, 1.8vw, 1.6rem); line-height: 1.2; margin: 0 0 .25rem; }
+  .sc-heading { font-size: .92rem; font-weight: 500; color: var(--slate-300); margin: 0 0 .75rem; }
+  .sc-text { color: var(--slate-400); font-size: .9rem; line-height: 1.65; margin: 0 0 1rem; }
+
+  .sc-list { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem 1.25rem; margin: 0 0 1.25rem; }
+  .sc-list li { display: flex; align-items: center; gap: .5rem; color: #fff; font-size: .88rem; }
+  .sc-list i { color: var(--red); font-size: .8rem; }
+
+  .sc-cta { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; padding: .55rem .55rem .55rem 1.25rem; border-radius: 999px; background: rgb(255 255 255 / .05); }
+  .sc-price { font-family: var(--font-display); font-weight: 500; font-size: .92rem; color: #fff; }
+  .sc-btn { display: inline-flex; align-items: center; gap: .5rem; padding: .6rem 1.2rem; border-radius: 999px; font-weight: 600; font-size: .85rem; color: #fff; background: var(--grad-cta); transition: background .25s; }
+  .sc-btn i { transition: transform .3s var(--ease); }
+  .sc-btn:hover { color: #fff; background: var(--red-600); }
+  .sc-btn:hover i { transform: rotate(45deg); }
+
+  /* Six feature cards */
+  .ftiles { margin-top: .5rem; position: relative; z-index: 1; }
+  .ftile { padding: 1.5rem; }
+  .ftile-icon { width: 2.5rem; height: 2.5rem; border-radius: .6rem; display: grid; place-items: center; background: rgb(255 85 85 / .12); color: var(--red); font-size: 1.1rem; }
+  .ftile-num { font-family: var(--font-display); font-size: .8rem; color: var(--slate-500); font-weight: 600; }
+  .ftile-text { color: var(--slate-300); font-size: .875rem; line-height: 1.7; margin: 0; }
+
+  @media (max-width: 575.98px) {
+    .sc-list { grid-template-columns: 1fr; }
+    .sc-cta { border-radius: var(--radius); }
+  }
+</style>

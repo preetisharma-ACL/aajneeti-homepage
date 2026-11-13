@@ -1,0 +1,94 @@
+---
+import { faqs, links, company } from '../data/site.js';
+
+// Show 6 FAQs (indices 1–6 in site.js: project fit, qualified lead, fake leads, guarantee, cost, go-live time).
+// The other entries stay in site.js — change this slice to swap questions.
+const shown = faqs.slice(1, 7);
+
+// Two independent columns (opening one item never stretches the other column)
+const half = Math.ceil(shown.length / 2);
+const columns = [shown.slice(0, half), shown.slice(half)];
+---
+
+<section class="faq-dark" aria-labelledby="faq-title">
+  <div class="container-hoe">
+    <div class="faq-head text-center" data-aos="fade-up">
+      <p class="eyebrow mb-3">Questions</p>
+      <h2 id="faq-title" class="title-lg text-white mb-3">Questions clients ask<br class="d-none d-md-inline" /> before they start.</h2>
+      <p class="faq-sub">Quick answers about how we work, what we charge and how we protect lead quality.</p>
+    </div>
+
+    <div class="row gx-4 gy-3 faq-grid">
+      {columns.map((col, c) => (
+        <div class="col-lg-6 d-flex flex-column gap-3">
+          {col.map((f, j) => {
+            const id = `faq-${c}-${j}`;
+            return (
+              <div class="faq-item" data-aos="fade-up" data-aos-delay={String(j * 60)}>
+                <button class="faq-q collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#${id}`} aria-expanded="false" aria-controls={id}>
+                  <span>{f.q}</span>
+                  <i class="bi bi-plus-lg faq-icon" aria-hidden="true"></i>
+                </button>
+                <div id={id} class="collapse">
+                  <div class="faq-a" set:html={f.a} />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      ))}
+    </div>
+
+    <div class="faq-cta" data-aos="fade-up">
+      <div>
+        <h3 class="faq-cta-title">Didn't find your answer?</h3>
+        <p class="faq-cta-text">Talk to our team directly. We usually respond within 4 hours.</p>
+      </div>
+      <div class="d-flex flex-wrap align-items-center gap-3">
+        <a href={company.phoneHref} class="faq-phone"><i class="bi bi-telephone"></i>{company.phone}</a>
+        <a href={links.contact} class="btn-pill btn-grad faq-btn">Book a free project review <i class="bi bi-arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-dark { background: var(--navy); color: var(--slate-50); padding-block: clamp(4rem, 8vw, 6rem); }
+
+  .faq-head { max-width: 46rem; margin: 0 auto clamp(2.5rem, 5vw, 3.5rem); }
+  .faq-sub { color: var(--slate-400); font-size: 1rem; margin: 0; }
+
+  /* Question cards — no borders, lifted by background */
+  .faq-item {
+    background: var(--navy-800);
+    border-radius: var(--radius);
+    transition: background .3s var(--ease);
+  }
+  .faq-item:hover, .faq-item:has(.faq-q:not(.collapsed)) { background: #243247; }
+  .faq-q {
+    width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1.25rem;
+    background: none; border: 0; text-align: left; color: #fff;
+    padding: 1.35rem 1.5rem;
+    font-family: var(--font-display); font-weight: 500; font-size: 1.05rem; letter-spacing: -.01em; line-height: 1.4;
+  }
+  .faq-icon { flex-shrink: 0; font-size: 1rem; color: #fff; transition: transform .35s var(--ease), color .3s; }
+  .faq-q:not(.collapsed) .faq-icon { transform: rotate(45deg); color: var(--red); }
+  .faq-a { padding: 0 1.5rem 1.4rem; color: var(--slate-300); font-size: .95rem; line-height: 1.75; }
+  .faq-a :global(a) { color: var(--red); text-decoration: underline; text-underline-offset: 3px; }
+
+  /* Bottom help box — HOE navy with soft slate light, like the hero */
+  .faq-cta {
+    margin-top: clamp(2.5rem, 5vw, 3.5rem);
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.5rem 2rem;
+    padding: clamp(1.75rem, 3.5vw, 2.5rem) clamp(1.5rem, 3.5vw, 2.75rem);
+    border-radius: var(--radius);
+    background:
+      radial-gradient(ellipse 70% 140% at 75% 120%, #444d5b 0%, #313a4b 30%, #1d2437 60%, rgb(29 36 55 / 0) 100%),
+      var(--navy-800);
+  }
+  .faq-cta-title { color: #fff; font-size: clamp(1.4rem, 2.2vw, 1.75rem); margin: 0 0 .4rem; }
+  .faq-cta-text { color: var(--slate-300); margin: 0; }
+  .faq-phone { color: #fff; font-weight: 500; display: inline-flex; align-items: center; gap: .5rem; }
+  .faq-phone:hover { color: var(--red); }
+  .faq-btn, .faq-btn:hover { box-shadow: none; }
+</style>

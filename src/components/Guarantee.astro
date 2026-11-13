@@ -1,0 +1,61 @@
+---
+import { guarantees, guaranteeStats } from '../data/site.js';
+---
+
+<section class="section section-dark guarantee" aria-labelledby="guarantee-title">
+  <div class="container-hoe position-relative">
+    <div class="text-center mx-auto mb-5" style="max-width: 46rem;">
+      <p class="eyebrow centered" data-aos="fade-up">The AAJneeti guarantee</p>
+      <h2 id="guarantee-title" class="title-lg text-white" data-aos="fade-up" data-aos-delay="80">
+        We protect you from <span class="text-red">fake leads.</span>
+      </h2>
+    </div>
+
+    <div class="row g-4">
+      {guarantees.map((g, i) => (
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay={String(i * 120)}>
+          <article class="card-dark">
+            <div class="d-flex justify-content-between align-items-start mb-4">
+              <span class="icon-tile"><i class={`bi ${g.icon}`}></i></span>
+              <span class="big-num">0{i + 1}</span>
+            </div>
+            <h3 class="fs-4 text-white mb-3">{g.title}</h3>
+            <p class="mb-0 small-lh">{g.text}</p>
+          </article>
+        </div>
+      ))}
+    </div>
+
+    <p class="note text-center mt-5" data-aos="fade-up">
+      <i class="bi bi-eye me-2 text-red"></i>Every tag and every replacement shows in your CRM and dashboard. Nothing is hidden in a monthly PDF.
+    </p>
+
+    <div class="stats" data-aos="fade-up" data-aos-delay="100">
+      {guaranteeStats.map((s) => (
+        <div class="stat">
+          <div class="stat-value text-white">{s.value}</div>
+          <div class="stat-label">{s.label}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .guarantee { overflow: hidden; }
+  .big-num { font-family: var(--font-display); font-weight: 600; font-size: 3rem; line-height: 1; color: transparent; -webkit-text-stroke: 1px var(--navy-600); }
+  .card-dark:hover .big-num { -webkit-text-stroke-color: var(--red); }
+  .small-lh { line-height: 1.7; font-size: .97rem; }
+  .note { font-size: .95rem; }
+  .stats {
+    margin-top: 3rem; display: grid; grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--navy-800); border-bottom: 1px solid var(--navy-800);
+  }
+  .stat { padding: 2rem 1.5rem; text-align: center; }
+  .stat + .stat { border-left: 1px solid var(--navy-800); }
+  .stat-label { color: var(--slate-400); }
+  @media (max-width: 767.98px) {
+    .stats { grid-template-columns: 1fr; }
+    .stat + .stat { border-left: 0; border-top: 1px solid var(--navy-800); }
+  }
+</style>

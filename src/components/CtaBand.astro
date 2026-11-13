@@ -1,0 +1,55 @@
+---
+import { ctaStats, links, company } from '../data/site.js';
+---
+
+<section class="cta-wrap" aria-labelledby="cta-title">
+  <div class="cta-box" data-aos="zoom-in-up">
+    <div class="row g-5 align-items-center position-relative">
+      <div class="col-lg-7">
+        <span class="live-pill"><span class="dot"></span>Now booking new campaigns</span>
+        <h2 id="cta-title" class="title-xl mt-3 mb-0">
+          1,000 leads.<br /><span class="grad-text">15 to 20 bookings.</span>
+        </h2>
+        <p class="cta-sub">
+          That's what our real estate clients typically see from 1,000 leads on a single project, when their sales team calls
+          every lead within 24 hours. Qualified leads guaranteed in writing, a named team, and campaigns live in 3 to 5 days.
+        </p>
+        <div class="d-flex flex-wrap gap-3">
+          <a href={links.contact} class="btn-pill btn-grad lg">Book a free project review <i class="bi bi-arrow-right"></i></a>
+          <a href={company.phoneHref} class="btn-pill btn-ghost-dark lg"><i class="bi bi-telephone"></i> {company.phone}</a>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="cta-stats">
+          {ctaStats.map((s) => (
+            <div class="cta-stat">
+              <div class="stat-value">{s.value}</div>
+              <div class="stat-label text-slate-600">{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-wrap { padding: 1rem; background: #fff; }
+  .cta-box {
+    position: relative; overflow: hidden;
+    border-radius: var(--radius);
+    background: var(--grad-soft);
+    padding: clamp(2.5rem, 6vw, 6rem) clamp(1.5rem, 5vw, 4rem);
+    color: var(--navy);
+  }
+  .cta-box::before { content: ''; position: absolute; right: -10rem; bottom: -14rem; width: 36rem; height: 36rem; border-radius: 50%; background: radial-gradient(circle, rgb(255 85 85 / .18), transparent 65%); }
+  .live-pill { display: inline-flex; align-items: center; gap: .5rem; font-size: .8rem; font-weight: 600; color: #047857; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 999px; padding: .35rem .9rem; }
+  .live-pill .dot { width: .5rem; height: .5rem; border-radius: 50%; background: #10b981; animation: blink 1.6s infinite; }
+  @keyframes blink { 50% { opacity: .3; } }
+  .grad-text { background: var(--grad-cta); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .cta-sub { font-size: 1.15rem; font-weight: 300; line-height: 1.7; opacity: .85; margin: 1.5rem 0 2rem; max-width: 38rem; }
+  .cta-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .cta-stat { background: rgb(255 255 255 / .8); backdrop-filter: blur(6px); border: 1px solid #fff; border-radius: var(--radius); padding: 1.5rem; box-shadow: 0 20px 40px -30px rgb(15 23 42 / .4); }
+  .cta-stat .stat-value { font-size: clamp(1.5rem, 2.6vw, 2.1rem); color: var(--navy); }
+  .cta-stat:nth-child(1) .stat-value, .cta-stat:nth-child(4) .stat-value { color: var(--red-600); }
+</style>

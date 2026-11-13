@@ -1,0 +1,46 @@
+---
+import ListingCard from './ui/ListingCard.astro';
+import { caseStudies, links } from '../data/site.js';
+---
+
+<section class="section bg-white" id="case-studies" aria-labelledby="cs-title">
+  <div class="container-hoe">
+    <div class="d-flex flex-wrap justify-content-between align-items-end gap-4 mb-5">
+      <div style="max-width: 40rem;">
+        <p class="eyebrow" data-aos="fade-up">Case studies</p>
+        <h2 id="cs-title" class="title-lg" data-aos="fade-up" data-aos-delay="80">What our campaigns <span class="text-red">actually delivered.</span></h2>
+        <p class="text-slate-500 small mb-0" data-aos="fade-up" data-aos-delay="140">
+          <i class="bi bi-info-circle me-1"></i>Leads and cost per lead come from our campaign dashboard. Bookings and admissions are as reported by the client.
+        </p>
+      </div>
+      <a href={links.caseStudies} class="btn-pill btn-ghost-dark" data-aos="fade-up">All case studies <i class="bi bi-arrow-right"></i></a>
+    </div>
+
+    <div class="row g-4">
+      {caseStudies.map((c, i) => (
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay={String(i * 120)}>
+          <ListingCard
+            href={links.caseStudies}
+            img={c.img}
+            alt={c.alt}
+            pillLeft={c.num}
+            label={`Case Study · ${c.tag}`}
+            title={`${c.num} ${c.title}`}
+            footText="Read the case study"
+          >
+            <p class="cs-text">{c.text}</p>
+            <ul class="cs-facts list-unstyled">
+              {c.facts.map((f) => <li>{f}</li>)}
+            </ul>
+          </ListingCard>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .cs-text { font-size: .93rem; line-height: 1.7; color: var(--navy-600); margin: 0 0 1rem; }
+  .cs-facts { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0; }
+  .cs-facts li { font-size: .78rem; font-weight: 600; color: var(--navy); background: var(--slate-100); border-radius: 999px; padding: .35rem .85rem; }
+</style>

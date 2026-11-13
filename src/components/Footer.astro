@@ -1,0 +1,163 @@
+---
+import { company, socials, footerCols, cities, linkFor, cityHref, links } from '../data/site.js';
+const year = new Date().getFullYear();
+const perks = ['New launches and project updates', 'Demand and price trends by location', 'Lead handling tips and tricks', 'New tools for real estate sales'];
+---
+
+<footer class="site-footer">
+  <!-- Newsletter -->
+  <div class="container-hoe">
+    <div class="newsletter" data-aos="fade-up">
+      <div class="row g-4 align-items-center position-relative z-1">
+        <div class="col-lg-7">
+          <p class="eyebrow mb-2">For channel partners and developers</p>
+          <h2 class="title-md text-white mb-3">Know What's Launching Before the Market Does.</h2>
+          <p class="nl-text">
+            Updates from AAJneeti for brokers, channel partners and developers. Get new project launches, where buyer demand and
+            prices are moving, tips to handle and convert leads faster, and the technology real estate sales teams are using now.
+          </p>
+          <ul class="nl-perks list-unstyled m-0">
+            {perks.map((p) => <li><i class="bi bi-check-circle-fill"></i>{p}</li>)}
+          </ul>
+        </div>
+        <div class="col-lg-5">
+          <!-- TODO: connect to the newsletter backend (form action / API endpoint) -->
+          <form class="nl-form" data-newsletter>
+            <label for="nl-email" class="visually-hidden">Email address</label>
+            <input id="nl-email" type="email" required placeholder="Your work email" autocomplete="email" />
+            <button type="submit" class="btn-pill btn-grad">Subscribe <i class="bi bi-send"></i></button>
+          </form>
+          <p class="nl-fine">Free. Unsubscribe anytime. <a href={links.privacy}>Privacy Policy</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Columns -->
+  <div class="container-hoe footer-main">
+    <div class="row g-5">
+      <div class="col-lg-4">
+        <img src="/images/logo.webp" alt="AAJneeti Connect Ltd." height="56" class="mb-3" />
+        <p class="footer-tag font-accent">Leads you can trust.<br />Numbers you can check.</p>
+
+        <div class="office-block">
+          <a href={links.officeHref.Noida} class="office-title">Noida Office <i class="bi bi-arrow-up-right"></i></a>
+          <p>{company.address}</p>
+          <a href={company.phoneHref}><i class="bi bi-telephone"></i>{company.phone}</a>
+          <a href={`mailto:${company.email}`}><i class="bi bi-envelope"></i>{company.email}</a>
+        </div>
+        <div class="office-block">
+          <a href={links.officeHref.USA} class="office-title">US Office <i class="bi bi-arrow-up-right"></i></a>
+          <p class="mb-1">USA</p>
+          <a href={`mailto:${company.email}`}><i class="bi bi-envelope"></i>{company.email}</a>
+        </div>
+        <a href={links.offices} class="link-more small">See all 6 offices <i class="bi bi-arrow-right"></i></a>
+
+        <div class="d-flex gap-2 mt-4">
+          {socials.map((s) => (
+            <a href={s.href} class="f-social" target="_blank" rel="noopener" aria-label={s.name}><i class={`bi ${s.icon}`}></i></a>
+          ))}
+        </div>
+      </div>
+
+      {footerCols.map((col) => (
+        <div class="col-6 col-md-4 col-lg-2 f-col">
+          <h3 class="f-title">{col.title}</h3>
+          <ul class="list-unstyled m-0">
+            {col.links.map((l) => <li><a href={linkFor(l)}>{l}</a></li>)}
+          </ul>
+        </div>
+      ))}
+
+      <div class="col-md-12 col-lg-2 f-col">
+        <h3 class="f-title">Trust</h3>
+        <div class="d-flex flex-column gap-2">
+          <span class="trust"><i class="bi bi-flag-fill"></i> Made in India</span>
+          <span class="trust"><i class="bi bi-google"></i> Google Certified Partner</span>
+          <span class="trust"><i class="bi bi-shield-lock-fill"></i> HDFC SmartGateway</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="cities">
+      <h3 class="f-title mb-3">Top Cities We Serve</h3>
+      <div class="d-flex flex-wrap gap-2">
+        {cities.map((c) => <a href={cityHref(c)} class="city-pill">{c}</a>)}
+      </div>
+    </div>
+
+    <div class="pay-strip">
+      <span class="pay-icon"><i class="bi bi-credit-card-2-front"></i></span>
+      <div class="flex-grow-1">
+        <strong>Make a secure payment</strong>
+        <small>Secured by HDFC SmartGateway · UPI, cards, net banking &amp; wallets</small>
+      </div>
+      <a href={links.payment} class="btn-pill btn-ghost-dark sm">Make payment <i class="bi bi-arrow-right"></i></a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <div class="container-hoe d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+      <p class="m-0">© {year} AAJneeti Connect Ltd. All rights reserved.</p>
+      <nav class="d-flex flex-wrap gap-3" aria-label="Legal">
+        <a href={links.privacy}>Privacy Policy</a>
+        <a href={links.terms}>Terms of Service</a>
+        <a href={links.refund}>Refund Policy</a>
+        <a href={links.hr}>HR Policy</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Placeholder handler until the newsletter backend is connected.
+  document.querySelectorAll<HTMLFormElement>('[data-newsletter]').forEach((form) =>
+    form.addEventListener('submit', (e) => e.preventDefault())
+  );
+</script>
+
+<style>
+  .site-footer { background: #fff; color: var(--navy); border-top: 1px solid var(--slate-100); padding-top: 4rem; }
+  .newsletter {
+    position: relative; overflow: hidden; border-radius: var(--radius-lg);
+    background: var(--grad-band); color: #fff; padding: clamp(2rem, 5vw, 3.5rem);
+  }
+  .newsletter::after { content: ''; position: absolute; left: -8rem; top: -8rem; width: 26rem; height: 26rem; border-radius: 50%; background: radial-gradient(circle, rgb(162 28 175 / .25), transparent 65%); pointer-events: none; z-index: 0; }
+  .nl-text { color: var(--slate-300); font-size: .95rem; line-height: 1.7; }
+  .nl-perks { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem 1.25rem; font-size: .88rem; color: var(--slate-200); }
+  .nl-perks i { color: var(--red); margin-right: .5rem; }
+  .nl-form { display: flex; gap: .5rem; background: #fff; border-radius: 999px; padding: .4rem; }
+  .nl-form input { flex: 1; min-width: 0; border: 0; outline: 0; padding: 0 1rem; font-size: .95rem; background: transparent; color: var(--navy); }
+  .nl-fine { margin: .85rem 0 0 1rem; font-size: .8rem; color: var(--slate-400); }
+  .nl-fine a { color: #fff; text-decoration: underline; }
+
+  .footer-main { padding-block: 4rem 2rem; }
+  .footer-tag { font-size: 1rem; text-transform: uppercase; line-height: 1.15; margin-bottom: 1.5rem; }
+  .office-block { margin-bottom: 1.25rem; font-size: .88rem; }
+  .office-block p { color: var(--navy-600); line-height: 1.6; margin-bottom: .4rem; }
+  .office-block a:not(.office-title) { display: flex; gap: .5rem; color: var(--navy-600); margin-bottom: .25rem; }
+  .office-block a:hover { color: var(--red); }
+  .office-title { font-family: var(--font-display); font-weight: 600; font-size: 1rem; color: var(--navy); display: inline-flex; gap: .35rem; margin-bottom: .35rem; }
+  .f-title { font-family: var(--font-body); font-size: .8rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--slate-500); margin-bottom: 1.1rem; }
+  .f-col li { margin-bottom: .6rem; }
+  .f-col a { font-size: .88rem; color: var(--navy-700); }
+  .f-col a:hover { color: var(--red); }
+  .trust { font-size: .82rem; font-weight: 500; display: inline-flex; align-items: center; gap: .5rem; border: 1px solid var(--slate-200); border-radius: .5rem; padding: .5rem .75rem; }
+  .trust i { color: var(--red); }
+  .f-social { width: 2.4rem; height: 2.4rem; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--slate-200); color: var(--navy); }
+  .f-social:hover { background: var(--grad-cta); color: #fff; border-color: transparent; }
+
+  .cities { margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid var(--slate-100); }
+  .city-pill { font-size: .8rem; padding: .35rem .85rem; border-radius: 999px; background: var(--slate-50); border: 1px solid var(--slate-200); color: var(--navy-700); }
+  .city-pill:hover { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+  .pay-strip { margin-top: 2.5rem; display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; padding: 1.25rem 1.5rem; border-radius: var(--radius); background: var(--grad-soft); }
+  .pay-icon { width: 2.8rem; height: 2.8rem; border-radius: .7rem; display: grid; place-items: center; background: #fff; color: var(--red-600); font-size: 1.25rem; }
+  .pay-strip strong { display: block; font-family: var(--font-display); font-weight: 600; }
+  .pay-strip small { color: var(--navy-600); font-size: .82rem; }
+
+  .footer-bottom { border-top: 1px solid var(--slate-100); padding-block: 1.5rem; font-size: .82rem; color: var(--slate-500); }
+  .footer-bottom a { color: var(--navy-700); }
+  .footer-bottom a:hover { color: var(--red); }
+  @media (max-width: 575.98px) { .nl-perks { grid-template-columns: 1fr; } .nl-form { flex-direction: column; border-radius: var(--radius); } .nl-form input { padding: .75rem 1rem; } }
+</style>

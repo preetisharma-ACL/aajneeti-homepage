@@ -1,0 +1,149 @@
+---
+import { links } from '../data/site.js';
+
+const proofs = [
+  { icon: 'bi-patch-check-fill', text: 'Up to 60% qualified leads' },
+  { icon: 'bi-kanban', text: 'Free CRM' },
+  { icon: 'bi-graph-up-arrow', text: 'Live dashboard' },
+];
+---
+
+<!--
+  Layout: centred hero (badge → headline → subtext → buttons → "trusted by" + logos).
+  Colours: House of Education hero — deep navy edges (#091023) with a softly lit slate backdrop (#424b5a),
+  sampled from houseofeducation.com's hero image. Pink/red appears only in the CTA, exactly as on HOE.
+-->
+<section class="hero" aria-labelledby="hero-title">
+
+  <div class="hero-light" aria-hidden="true"></div>
+
+  <div class="container-hoe hero-inner text-center">
+    <p class="hero-kicker" data-aos="fade-up">
+      Real estate lead generation agency · Noida, since 2014
+    </p>
+
+    <h1 id="hero-title" class="hero-title" data-aos="fade-up" data-aos-delay="80">
+      We only take projects<br class="d-none d-md-inline" /> we can <span class="highlight">deliver.</span>
+    </h1>
+
+    <p class="hero-sub" data-aos="fade-up" data-aos-delay="160">
+      Before you pay, we tell you honestly if your project can get qualified leads. Up to 60% are qualified, written into
+      your contract, and we refund every qualified lead we miss.
+    </p>
+
+    <div class="d-flex flex-wrap justify-content-center gap-3 mt-4" data-aos="fade-up" data-aos-delay="240">
+      <a href={links.contact} class="btn-pill btn-grad lg">Book a free project review <i class="bi bi-arrow-right"></i></a>
+      <a href={links.caseStudies} class="btn-pill btn-glass lg">See case studies <i class="bi bi-play-fill"></i></a>
+    </div>
+
+    <p class="hero-note" data-aos="fade-up" data-aos-delay="300">
+      If your project isn't a fit, we'll tell you on the call.
+    </p>
+
+    <ul class="hero-proofs list-unstyled" data-aos="fade-up" data-aos-delay="360">
+      {proofs.map((p) => <li><i class={`bi ${p.icon}`}></i>{p.text}</li>)}
+      <li><span class="stars">★★★★★</span>Rated 4.5+ on Google</li>
+    </ul>
+  </div>
+
+  <!-- Trusted by (HOE: slate-300 text on navy) -->
+  <div class="hero-trusted">
+    <p class="trusted-title">
+      Trusted by <strong>200+</strong> developers, channel partners and brands since 2014
+    </p>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    padding-top: clamp(8rem, 11vw, 9.5rem);
+    /* Full-screen hero (same height as before); smaller content is centred inside it */
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    background: #091023; /* HOE hero edge colour */
+    color: var(--slate-50);
+  }
+
+  /* HOE hero backdrop, reproduced from houseofeducation.com's hero image.
+     Measured against an 11×11 colour grid of their image (person excluded): mean ΔRGB 6.5.
+     Dark navy top and left third, light building toward lower centre-right, soft lift bottom-right. */
+  .hero-light {
+    position: absolute; inset: 0; z-index: -2; pointer-events: none;
+    background:
+      radial-gradient(ellipse 30% 45% at 92% 100%, rgb(60 69 82 / .9) 0%, rgb(60 69 82 / 0) 100%),
+      radial-gradient(ellipse 70% 95% at 62% 72%,
+        #444d5b 0%,
+        #3d4657 18%,
+        #313a4b 33%,
+        #222a3c 50%,
+        #151c2f 68%,
+        #0c1326 84%,
+        #091023 100%);
+  }
+  .hero::after { content: none; } /* no fade: hero ends on the HOE gradient, light section follows */
+
+  .hero-inner {
+    position: relative; max-width: 62rem; width: 100%;
+    flex: 1 0 auto;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+  }
+
+  .hero-kicker {
+    display: inline-flex; align-items: center; gap: .6rem;
+    font-size: .85rem; font-weight: 500; color: var(--slate-200);
+    padding: .45rem 1.1rem; border-radius: 999px;
+    background: rgb(255 255 255 / .08); border: 1px solid rgb(255 255 255 / .12);
+    backdrop-filter: blur(8px); margin-bottom: 1.25rem;
+  }
+
+  .hero-title {
+    font-size: clamp(2.2rem, 4.4vw, 3.75rem);
+    line-height: 1.08;
+    letter-spacing: -0.04em;
+    color: #fff;
+    margin: 0 auto;
+  }
+  .hero-sub {
+    max-width: 46rem; margin: 1.25rem auto 0;
+    font-weight: 300; font-size: clamp(1rem, 1.3vw, 1.15rem); line-height: 1.6;
+    color: var(--slate-300);
+  }
+
+  /* Glass secondary button (the reference's "Watch demo") */
+  .btn-glass {
+    color: #fff;
+    background: rgb(255 255 255 / .1);
+    border-color: rgb(255 255 255 / .28);
+    backdrop-filter: blur(10px);
+  }
+  .hero .btn-grad, .hero .btn-grad:hover { box-shadow: none; }
+  .btn-glass:hover { color: var(--navy); background: #fff; border-color: #fff; }
+
+  .hero-note { margin: .85rem 0 0; font-size: .85rem; color: var(--slate-400); }
+
+  .hero-proofs {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem 1.75rem;
+    margin: 1.25rem 0 0; font-size: .88rem; font-weight: 500; color: rgb(255 255 255 / .9);
+  }
+  .hero-proofs li { display: inline-flex; align-items: center; gap: .45rem; }
+  .hero-proofs i { color: var(--red); }
+  .stars { color: #fbbf24; letter-spacing: 1px; }
+
+  /* Trusted by */
+  .hero-trusted { position: relative; margin-top: clamp(2.5rem, 4vw, 3.25rem); padding-bottom: 2.5rem; text-align: center; }
+  .trusted-title {
+    font-family: var(--font-display); font-weight: 500; font-size: clamp(.95rem, 1.4vw, 1.1rem);
+    color: var(--slate-300); margin: 0; padding-inline: 1.5rem;
+  }
+  .trusted-title strong { color: #fff; font-weight: 600; }
+
+  @media (max-width: 767.98px) {
+    .hero-proofs { gap: .5rem 1.1rem; font-size: .8rem; }
+    .btn-pill.lg { width: 100%; }
+  }
+</style>

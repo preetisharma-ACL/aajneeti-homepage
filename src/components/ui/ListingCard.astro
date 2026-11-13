@@ -1,0 +1,81 @@
+---
+/**
+ * Card style from the reference snapshot: inset image with pills, coloured label,
+ * title, body content (slot), footer text + round arrow button.
+ * Keeps the site's existing radius (var(--radius)).
+ */
+interface Props {
+  href: string;
+  img: string;
+  alt: string;
+  pillLeft?: string;
+  pillRight?: string;
+  label: string;
+  title: string;
+  footText: string;
+}
+const { href, img, alt, pillLeft, pillRight, label, title, footText } = Astro.props;
+---
+
+<a href={href} class="lcard">
+  <div class="lcard-media">
+    <img src={img} alt={alt} loading="lazy" />
+    {pillLeft && <span class="lpill lpill-left">{pillLeft}</span>}
+    {pillRight && <span class="lpill lpill-right">{pillRight}</span>}
+  </div>
+
+  <div class="lcard-body">
+    <p class="lcard-label">{label}</p>
+    <h3 class="lcard-title">{title}</h3>
+    <div class="lcard-content"><slot /></div>
+
+    <div class="lcard-foot">
+      <span class="lcard-foot-text">{footText}</span>
+      <span class="lcard-btn" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></span>
+    </div>
+  </div>
+</a>
+
+<style>
+  .lcard {
+    display: flex; flex-direction: column; height: 100%;
+    padding: .75rem;
+    background: #fff;
+    border: 1px solid var(--slate-100);
+    border-radius: var(--radius);
+    box-shadow: 0 18px 40px -24px rgb(15 23 42 / .28);
+    color: var(--navy);
+    transition: transform .4s var(--ease), box-shadow .4s var(--ease);
+  }
+  .lcard:hover { color: var(--navy); transform: translateY(-6px); box-shadow: 0 30px 60px -28px rgb(15 23 42 / .4); }
+
+  .lcard-media { position: relative; aspect-ratio: 4 / 3; border-radius: calc(var(--radius) - .1rem); overflow: hidden; }
+  .lcard-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease); }
+  .lcard:hover .lcard-media img { transform: scale(1.05); }
+  .lpill {
+    position: absolute; top: .85rem; z-index: 1;
+    font-size: .76rem; font-weight: 600; line-height: 1;
+    padding: .55rem .95rem; border-radius: 999px; color: #fff;
+    backdrop-filter: blur(6px);
+  }
+  .lpill-left { left: .85rem; background: rgb(224 46 46 / .88); }
+  .lpill-right { right: .85rem; background: rgb(15 23 42 / .78); }
+
+  .lcard-body { display: flex; flex-direction: column; flex-grow: 1; padding: 1.35rem .85rem .55rem; }
+  .lcard-label { font-size: .72rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--red-600); line-height: 1.5; margin: 0 0 .45rem; }
+  .lcard-title { font-size: 1.35rem; font-weight: 600; letter-spacing: -.02em; line-height: 1.25; margin: 0 0 .75rem; }
+  .lcard-content { margin-bottom: 1.25rem; }
+
+  .lcard-foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .lcard-foot-text { font-family: var(--font-display); font-weight: 600; font-size: 1rem; color: var(--navy); transition: color .3s; }
+  .lcard:hover .lcard-foot-text { color: var(--red-600); }
+  .lcard-btn {
+    flex-shrink: 0; width: 3.25rem; height: 3.25rem; border-radius: 50%;
+    display: grid; place-items: center; font-size: 1.1rem;
+    background: var(--navy); color: #fff;
+    transition: background .35s var(--ease);
+  }
+  .lcard-btn i { transition: transform .35s var(--ease); }
+  .lcard:hover .lcard-btn { background: var(--grad-cta); }
+  .lcard:hover .lcard-btn i { transform: rotate(45deg); }
+</style>

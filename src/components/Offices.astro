@@ -1,0 +1,67 @@
+---
+import { offices, officeStats, links } from '../data/site.js';
+---
+
+<section class="section section-soft" aria-labelledby="off-title">
+  <div class="container-hoe">
+    <div class="row g-5 align-items-center">
+      <div class="col-lg-5">
+        <p class="eyebrow" data-aos="fade-up">Where we work</p>
+        <h2 id="off-title" class="title-lg" data-aos="fade-up" data-aos-delay="80">Noida HQ and <span class="highlight">regional teams.</span></h2>
+        <p class="lede text-slate-600" data-aos="fade-up" data-aos-delay="140">
+          Campaigns for India, Dubai and the US are planned and run from our Noida headquarters, with regional teams who know their local markets.
+        </p>
+        <div class="o-stats" data-aos="fade-up" data-aos-delay="200">
+          {officeStats.map((s) => (
+            <div>
+              <div class="o-val">{s.value}</div>
+              <div class="o-lab">{s.label}</div>
+            </div>
+          ))}
+        </div>
+        <a href={links.offices} class="link-more mt-4" data-aos="fade-up">See all 6 offices <i class="bi bi-arrow-right"></i></a>
+      </div>
+
+      <div class="col-lg-7">
+        <div class="row g-3">
+          {offices.map((o, i) => (
+            <div class="col-sm-6" data-aos="zoom-in" data-aos-delay={String(i * 70)}>
+              <a href={links.officeHref[o.city]} class={`office ${o.tag === 'HQ' ? 'is-hq' : ''}`}>
+                <span class="o-pin"><i class="bi bi-geo-alt-fill"></i></span>
+                <span class="flex-grow-1">
+                  <strong>{o.city}</strong>
+                  <small>{o.desc}</small>
+                </span>
+                <span class={`o-tag tag-${o.tag.toLowerCase()}`}>{o.tag}</span>
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .o-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--slate-200); }
+  .o-val { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.4rem, 2.4vw, 2rem); letter-spacing: -.03em; color: var(--navy); line-height: 1; }
+  .o-lab { font-size: .8rem; color: var(--slate-500); margin-top: .4rem; }
+  .office {
+    display: flex; align-items: center; gap: 1rem; height: 100%;
+    background: #fff; border: 1px solid var(--slate-200); border-radius: var(--radius);
+    padding: 1.25rem; color: var(--navy);
+    transition: all .3s var(--ease);
+  }
+  .office:hover { transform: translateY(-4px); border-color: var(--red-200); box-shadow: 0 20px 40px -20px rgb(15 23 42 / .25); color: var(--navy); }
+  .office strong { display: block; font-family: var(--font-display); font-weight: 600; font-size: 1.1rem; }
+  .office small { display: block; font-size: .82rem; color: var(--slate-500); }
+  .o-pin { width: 2.6rem; height: 2.6rem; border-radius: .6rem; display: grid; place-items: center; background: var(--red-50); color: var(--red-600); flex-shrink: 0; }
+  .office.is-hq { background: var(--navy); border-color: var(--navy); color: #fff; }
+  .office.is-hq small { color: var(--slate-400); }
+  .office.is-hq .o-pin { background: var(--grad-cta); color: #fff; }
+  .office.is-hq:hover { color: #fff; }
+  .o-tag { font-size: .65rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; border-radius: 999px; padding: .2rem .55rem; }
+  .tag-hq { background: var(--red); color: #fff; }
+  .tag-india { background: var(--slate-100); color: var(--navy-600); }
+  .tag-global { background: #ede9fe; color: #6d28d9; }
+</style>

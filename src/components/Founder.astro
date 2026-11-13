@@ -1,0 +1,55 @@
+---
+import { links } from '../data/site.js';
+---
+
+<section class="section bg-white founder" aria-labelledby="founder-title">
+  <div class="container-hoe">
+    <div class="founder-card">
+      <div class="row g-0 align-items-stretch position-relative z-1">
+        <div class="col-md-5 col-lg-4 founder-photo-col" data-aos="fade">
+          <div class="founder-photo">
+            <img src="/images/founder.webp" alt="Alok Kumar Singh, Founder & CEO of AAJneeti Connect Ltd." loading="lazy" />
+            <span class="g-cert"><i class="bi bi-patch-check-fill"></i> Google-certified</span>
+          </div>
+        </div>
+        <div class="col-md-7 col-lg-8 d-flex align-items-center">
+          <div class="founder-body">
+            <p class="eyebrow" data-aos="fade-up">From the founder</p>
+            <h2 id="founder-title" class="title-md text-white" data-aos="fade-up" data-aos-delay="80">
+              <i class="bi bi-quote text-red"></i>I'd rather lose a deal than sell you leads we can't deliver.
+            </h2>
+            <p class="founder-text" data-aos="fade-up" data-aos-delay="140">
+              Everything on this page is a promise I'm personally responsible for: the guarantee in writing, the honest no when a
+              project isn't right for us, and an apology and refund when we fall short.
+            </p>
+            <div class="signature" data-aos="fade-up" data-aos-delay="200">
+              <span class="script">Alok Kumar Singh</span>
+              <span class="role">Alok Kumar Singh · Founder &amp; CEO, AAJneeti Connect Ltd.</span>
+            </div>
+            <div class="d-flex flex-wrap align-items-center gap-4 mt-4" data-aos="fade-up" data-aos-delay="260">
+              <a href={links.contact} class="btn-pill btn-grad">Book a free project review <i class="bi bi-arrow-right"></i></a>
+              <a href={links.realtyKnight} target="_blank" rel="noopener" class="link-more text-white"><i class="bi bi-youtube text-red"></i> Watch my real estate channel, The Realty Knight</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .founder-card { position: relative; border-radius: var(--radius-lg); overflow: hidden; background: var(--grad-band); box-shadow: 0 40px 80px -40px rgb(15 23 42 / .6); }
+  .founder-card::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 85% 20%, rgb(255 85 85 / .25), transparent 45%); pointer-events: none; }
+  /* Photo fills the full card height, flush with top/left/bottom edges */
+  .founder-photo-col { position: relative; min-height: 22rem; }
+  .founder-photo { position: absolute; inset: 0; }
+  .founder-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 20%; }
+  .g-cert { position: absolute; left: 1rem; bottom: 1rem; font-size: .75rem; font-weight: 600; background: #fff; color: var(--navy); border-radius: 999px; padding: .35rem .85rem; }
+  .g-cert i { color: #1a73e8; }
+  .founder-body { position: relative; padding: clamp(2rem, 5vw, 4rem); }
+  .founder-body .bi-quote { font-size: 2.2rem; margin-right: .25rem; vertical-align: -.2rem; }
+  .founder-text { color: var(--slate-300); font-size: 1.08rem; line-height: 1.75; font-weight: 300; max-width: 38rem; }
+  .signature { margin-top: 1.5rem; }
+  .signature .script { display: block; font-family: 'Brush Script MT', 'Segoe Script', cursive; font-size: 2.2rem; color: #fff; line-height: 1; transform: rotate(-3deg); transform-origin: left; }
+  .signature .role { display: block; margin-top: .75rem; font-size: .82rem; color: var(--slate-400); }
+</style>

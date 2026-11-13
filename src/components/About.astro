@@ -1,0 +1,99 @@
+---
+import { aboutTabs, links } from '../data/site.js';
+---
+
+<!-- About AAJneeti — dark theme, no image. Heading + links left; text + Mission/Vision/Story chips right -->
+<section class="about-light" aria-labelledby="about-title">
+  <div class="about-glow" aria-hidden="true"></div>
+  <div class="container-hoe position-relative">
+    <div class="row g-5">
+      <div class="col-lg-6">
+        <p class="eyebrow" data-aos="fade-up">About AAJneeti</p>
+        <h2 id="about-title" class="title-lg about-title" data-aos="fade-up" data-aos-delay="80">
+          The people behind your leads, <span class="text-red">since 2014.</span>
+        </h2>
+        <nav class="about-links" aria-label="About AAJneeti" data-aos="fade-up" data-aos-delay="140">
+          <a href={links.team}><i class="bi bi-people-fill"></i> Meet the team</a>
+          <i class="bi bi-chevron-right about-sep" aria-hidden="true"></i>
+          <a href={links.about}>Read our story</a>
+        </nav>
+      </div>
+
+      <div class="col-lg-6" data-tabs>
+        <p class="about-text" data-aos="fade-up" data-aos-delay="160">
+          AAJneeti Connect Ltd. is a lead generation company based in Sector 63, Noida. Since 2014 we have run campaigns for
+          real estate developers and brokers, colleges, interior studios, travel companies and B2B firms across India, Dubai and
+          the US. Some of the clients who joined us at the very start are still with us.
+        </p>
+
+        <div class="about-chips" role="tablist" aria-label="About AAJneeti" data-aos="fade-up" data-aos-delay="220">
+          {aboutTabs.map((t, i) => (
+            <button type="button" class={`about-chip${i === 0 ? ' is-active' : ''}`} role="tab" aria-selected={i === 0 ? 'true' : 'false'} data-text={t.text}>
+              {t.label}
+            </button>
+          ))}
+        </div>
+        <p class="about-tab-text" aria-live="polite" data-tab-text data-aos="fade-up" data-aos-delay="260">{aboutTabs[0].text}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-tabs]').forEach((root) => {
+    const out = root.querySelector<HTMLElement>('[data-tab-text]');
+    const btns = root.querySelectorAll<HTMLButtonElement>('.about-chip');
+    btns.forEach((btn) =>
+      btn.addEventListener('click', () => {
+        btns.forEach((b) => { b.classList.remove('is-active'); b.setAttribute('aria-selected', 'false'); });
+        btn.classList.add('is-active');
+        btn.setAttribute('aria-selected', 'true');
+        if (!out) return;
+        out.classList.add('is-fading');
+        setTimeout(() => { out.textContent = btn.dataset.text ?? ''; out.classList.remove('is-fading'); }, 180);
+      })
+    );
+  });
+</script>
+
+<style>
+  .about-light {
+    position: relative; overflow: hidden;
+    background: #20232b; color: var(--slate-50); /* charcoal, sampled from the reference */
+    padding-block: clamp(4rem, 8vw, 6rem);
+  }
+  /* Rust glow, top-left — colours sampled from the reference (#803e2e → #20232b) */
+  .about-glow {
+    position: absolute; left: -12rem; top: -15rem; width: 34rem; height: 34rem; border-radius: 50%;
+    background: radial-gradient(circle, #8a4230 0%, rgb(128 62 46 / .8) 22%, rgb(87 48 46 / .5) 45%, rgb(32 35 43 / 0) 72%);
+    filter: blur(20px);
+    pointer-events: none;
+  }
+
+  .about-title { color: #fff; margin-bottom: 1.75rem; }
+  .about-links { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; font-weight: 500; font-size: .98rem; }
+  .about-links a { color: #fff; display: inline-flex; align-items: center; gap: .45rem; }
+  .about-links a:hover { color: var(--red); }
+  .about-links a .bi { color: var(--red); }
+  .about-sep { font-size: .75rem; color: var(--slate-500); }
+
+  .about-text { color: var(--slate-300); font-size: 1.05rem; line-height: 1.75; margin: 0 0 1.5rem; }
+
+  .about-chips { display: flex; flex-wrap: wrap; gap: .6rem; }
+  .about-chip {
+    border: 1px solid rgb(255 255 255 / .35); background: transparent; color: #fff;
+    border-radius: 999px; padding: .5rem 1.1rem;
+    font-size: .9rem; font-weight: 500;
+    transition: all .25s var(--ease);
+  }
+  .about-chip:hover { border-color: var(--red); color: var(--red); }
+  .about-chip.is-active { background: #fff; border-color: #fff; color: var(--navy); }
+
+  .about-tab-text {
+    margin: 1.25rem 0 0; padding: 1.1rem 1.35rem;
+    background: rgb(255 255 255 / .05); border-radius: var(--radius);
+    color: var(--slate-200); font-size: .98rem; line-height: 1.7;
+    transition: opacity .18s;
+  }
+  .about-tab-text.is-fading { opacity: 0; }
+</style>

@@ -1,0 +1,173 @@
+---
+import 'swiper/css';
+import 'swiper/css/pagination';
+import { testimonials, links } from '../data/site.js';
+
+const stars = (r: number) =>
+  Array.from({ length: 5 }, (_, i) => (r >= i + 1 ? 'bi-star-fill' : r >= i + 0.3 ? 'bi-star-half' : 'bi-star'));
+const stack = testimonials.slice(0, 3);
+---
+
+<!-- Client reviews: intro left, review slider right (bleeds to screen edge), HOE navy theme -->
+<section class="reviews" aria-labelledby="t-title">
+  <div class="container-hoe">
+    <div class="row g-5 align-items-center">
+      <div class="col-lg-5">
+        <p class="eyebrow" data-aos="fade-up"><i class="bi bi-chat-quote-fill"></i> Client reviews</p>
+        <h2 id="t-title" class="title-lg text-white" data-aos="fade-up" data-aos-delay="80">
+          What clients say about <span class="text-red">working with AAJneeti</span>
+        </h2>
+        <p class="r-lede" data-aos="fade-up" data-aos-delay="140">
+          Reviews from developers, channel partners, colleges and brands we run campaigns for. Some have been with us since 2014.
+        </p>
+
+        <div class="r-proof" data-aos="fade-up" data-aos-delay="200">
+          <div class="r-stack" aria-hidden="true">
+            {stack.map((t) => <span class="r-av">{t.name.charAt(0)}</span>)}
+            <span class="r-av r-av-count">200+</span>
+          </div>
+          <div>
+            <p class="r-proof-num"><span class="text-red">4.5+</span> <span class="r-stars">★★★★★</span></p>
+            <p class="r-proof-txt">Rated on Google · 200+ clients</p>
+          </div>
+        </div>
+
+        <a href={links.google} target="_blank" rel="noopener" class="link-more text-white mt-4" data-aos="fade-up">
+          Read all our reviews on Google <i class="bi bi-arrow-up-right"></i>
+        </a>
+      </div>
+
+      <div class="col-lg-7" data-aos="fade-left" data-aos-delay="120">
+        <div class="r-slider-wrap">
+          <div class="swiper r-swiper">
+            <div class="swiper-wrapper">
+              {testimonials.map((t) => (
+                <div class="swiper-slide h-auto">
+                  <figure class="r-card m-0">
+                    <div class="r-card-stars" aria-label={`Rated ${t.rating} out of 5`}>
+                      {stars(t.rating).map((s) => <i class={`bi ${s}`}></i>)}
+                      <span>{t.rating.toFixed(1)}</span>
+                    </div>
+                    <blockquote class="r-quote">“{t.quote}”</blockquote>
+                    <figcaption class="r-author">
+                      <span class="r-author-av">{t.name.charAt(0)}</span>
+                      <span class="flex-grow-1">
+                        <strong>{t.name}</strong>
+                        <small>{t.company}</small>
+                      </span>
+                      <i class="bi bi-quote r-mark" aria-hidden="true"></i>
+                    </figcaption>
+                  </figure>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div class="r-controls">
+          <button class="r-nav" type="button" data-r-prev aria-label="Previous review"><i class="bi bi-chevron-left"></i></button>
+          <div class="r-pagination"></div>
+          <button class="r-nav" type="button" data-r-next aria-label="Next review"><i class="bi bi-chevron-right"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import Swiper from 'swiper';
+  import { Navigation, Pagination, Autoplay, A11y } from 'swiper/modules';
+
+  new Swiper('.r-swiper', {
+    modules: [Navigation, Pagination, Autoplay, A11y],
+    slidesPerView: 1,
+    spaceBetween: 24,
+    loop: true,
+    speed: 700,
+    autoplay: { delay: 5500, disableOnInteraction: false, pauseOnMouseEnter: true },
+    navigation: { prevEl: '[data-r-prev]', nextEl: '[data-r-next]' },
+    pagination: { el: '.r-pagination', clickable: true },
+  });
+</script>
+
+<style>
+  .reviews {
+    position: relative; overflow: hidden;
+    padding-block: clamp(4rem, 8vw, 6rem);
+    color: var(--slate-50);
+    /* HOE navy with soft slate light (same family as the hero) */
+    background:
+      radial-gradient(ellipse 60% 90% at 70% 60%, #3a4354 0%, #2b3445 25%, #1d2437 50%, #131a2d 72%, #091023 100%);
+  }
+
+  .r-lede { color: var(--slate-300); font-size: 1.05rem; line-height: 1.7; max-width: 30rem; }
+
+  /* Avatar stack + rating */
+  .r-proof { display: flex; align-items: center; gap: 1.1rem; margin-top: 1.75rem; }
+  .r-stack { display: flex; }
+  .r-av {
+    width: 3.1rem; height: 3.1rem; border-radius: 50%;
+    display: grid; place-items: center;
+    font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; color: var(--navy);
+    background: #fff; box-shadow: 0 0 0 3px #1d2437;
+  }
+  .r-av + .r-av { margin-left: -.75rem; }
+  .r-av:nth-child(2) { background: var(--slate-200); }
+  .r-av:nth-child(3) { background: var(--slate-300); }
+  .r-av-count { color: #fff; font-size: .82rem; background: var(--grad-cta); }
+  .r-proof-num { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 1.35rem; color: #fff; line-height: 1.2; }
+  .r-stars { color: #fbbf24; font-size: .95rem; letter-spacing: 1px; }
+  .r-proof-txt { margin: .15rem 0 0; color: var(--slate-400); font-size: .88rem; }
+
+  /* Slider bleeds to the right screen edge, clipped on the left */
+  .r-swiper { overflow: hidden; padding: .5rem 0 2rem; }
+
+  .r-card {
+    height: 100%; display: flex; flex-direction: column;
+    background: #fff; color: var(--navy);
+    border-radius: var(--radius);
+    padding: 2rem 2.25rem 1.75rem;
+    box-shadow: 0 30px 60px -30px rgb(0 0 0 / .6);
+  }
+  .r-card-stars { display: flex; align-items: center; gap: .15rem; color: #f59e0b; font-size: .95rem; margin-bottom: 1.1rem; }
+  .r-card-stars span { margin-left: .5rem; font-weight: 600; font-size: .85rem; color: var(--navy); }
+  /* Show a short excerpt of each review (first 5 lines); full text stays in the page for SEO/screen readers */
+  .r-quote {
+    font-style: italic; font-size: .98rem; line-height: 1.7; color: var(--navy-600); margin: 0 0 1.5rem;
+    display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .r-author { display: flex; align-items: center; gap: .9rem; margin-top: auto; }
+  .r-author-av {
+    flex-shrink: 0; width: 3.2rem; height: 3.2rem; border-radius: 50%;
+    display: grid; place-items: center;
+    font-family: var(--font-display); font-weight: 600; font-size: 1.1rem; color: #fff;
+    background: var(--grad-cta);
+  }
+  .r-author strong { display: block; font-size: 1rem; }
+  .r-author small { display: block; font-size: .85rem; color: var(--slate-500); }
+  .r-mark { font-size: 3rem; line-height: 1; color: var(--red); }
+
+  /* Controls: round buttons + bar pagination */
+  .r-controls { display: flex; align-items: center; justify-content: center; gap: 1.75rem; margin-top: 2rem; }
+  .r-nav {
+    width: 3.5rem; height: 3.5rem; border-radius: 50%; border: 0;
+    display: grid; place-items: center; font-size: 1.25rem; color: #fff;
+    background: var(--grad-cta);
+    transition: transform .25s var(--ease), background .25s;
+  }
+  .r-nav:hover { transform: scale(1.06); background: var(--red-600); }
+  .r-pagination { position: static !important; width: auto !important; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .4rem; transform: none !important; }
+  .r-pagination :global(.swiper-pagination-bullet) {
+    width: 1.1rem; height: .3rem; border-radius: 999px; margin: 0 !important;
+    background: rgb(255 255 255 / .35); opacity: 1; transition: background .3s, width .3s;
+  }
+  .r-pagination :global(.swiper-pagination-bullet-active) { background: var(--red); width: 2.2rem; }
+
+  @media (max-width: 575.98px) {
+    .r-controls { gap: 1rem; }
+    .r-nav { width: 3rem; height: 3rem; font-size: 1.1rem; }
+    .r-pagination { gap: .3rem; flex-wrap: nowrap; }
+    .r-pagination :global(.swiper-pagination-bullet) { width: .55rem; }
+    .r-pagination :global(.swiper-pagination-bullet-active) { width: 1.3rem; }
+  }
+</style>
