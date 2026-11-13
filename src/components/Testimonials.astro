@@ -1,173 +1,239 @@
 ---
-import 'swiper/css';
-import 'swiper/css/pagination';
+// Client reviews — rebuilt to match aajneeti.social: stacked review card + "All Reviews" sidebar with pages.
 import { testimonials, links } from '../data/site.js';
 
-const stars = (r: number) =>
-  Array.from({ length: 5 }, (_, i) => (r >= i + 1 ? 'bi-star-fill' : r >= i + 0.3 ? 'bi-star-half' : 'bi-star'));
-const stack = testimonials.slice(0, 3);
+const TONES = ['#990010', '#092341', '#c4293b', '#334155', '#7a0010', '#6e6e73']; // aajneeti.social avatar tones
+const PER_PAGE = 6;
+const pages = Math.ceil(testimonials.length / PER_PAGE);
+const stars = (r: number) => Array.from({ length: 5 }, (_, i) => r >= i + 0.75);
 ---
 
-<!-- Client reviews: intro left, review slider right (bleeds to screen edge), HOE navy theme -->
-<section class="reviews" aria-labelledby="t-title">
-  <div class="container-hoe">
-    <div class="row g-5 align-items-center">
-      <div class="col-lg-5">
-        <p class="eyebrow" data-aos="fade-up"><i class="bi bi-chat-quote-fill"></i> Client reviews</p>
-        <h2 id="t-title" class="title-lg text-white" data-aos="fade-up" data-aos-delay="80">
-          What clients say about <span class="text-red">working with AAJneeti</span>
-        </h2>
-        <p class="r-lede" data-aos="fade-up" data-aos-delay="140">
-          Reviews from developers, channel partners, colleges and brands we run campaigns for. Some have been with us since 2014.
-        </p>
+<section class="reviews" aria-labelledby="t-title" data-reviews data-per-page={PER_PAGE}>
+  <div class="r-dots-bg" aria-hidden="true"></div>
+  <div class="r-glow" aria-hidden="true"></div>
 
-        <div class="r-proof" data-aos="fade-up" data-aos-delay="200">
-          <div class="r-stack" aria-hidden="true">
-            {stack.map((t) => <span class="r-av">{t.name.charAt(0)}</span>)}
-            <span class="r-av r-av-count">200+</span>
-          </div>
-          <div>
-            <p class="r-proof-num"><span class="text-red">4.5+</span> <span class="r-stars">★★★★★</span></p>
-            <p class="r-proof-txt">Rated on Google · 200+ clients</p>
-          </div>
-        </div>
-
-        <a href={links.google} target="_blank" rel="noopener" class="link-more text-white mt-4" data-aos="fade-up">
-          Read all our reviews on Google <i class="bi bi-arrow-up-right"></i>
-        </a>
+  <div class="container-hoe position-relative">
+    <header class="r-head" data-aos="fade-up">
+      <div>
+        <p class="eyebrow">Client reviews</p>
+        <h2 id="t-title" class="r-h2">What clients say about <span class="r-accent">working with AAJneeti</span></h2>
       </div>
+      <a class="r-gbadge" href={links.google} target="_blank" rel="noopener" aria-label="Rated 4.5+ on Google">
+        <span class="r-gbadge-g"><i class="bi bi-google"></i></span>
+        <span class="r-gbadge-txt"><b>4.5+</b><span class="r-gbadge-stars">★★★★★</span><small>Rated on Google</small></span>
+      </a>
+    </header>
 
-      <div class="col-lg-7" data-aos="fade-left" data-aos-delay="120">
-        <div class="r-slider-wrap">
-          <div class="swiper r-swiper">
-            <div class="swiper-wrapper">
-              {testimonials.map((t) => (
-                <div class="swiper-slide h-auto">
-                  <figure class="r-card m-0">
-                    <div class="r-card-stars" aria-label={`Rated ${t.rating} out of 5`}>
-                      {stars(t.rating).map((s) => <i class={`bi ${s}`}></i>)}
-                      <span>{t.rating.toFixed(1)}</span>
-                    </div>
-                    <blockquote class="r-quote">“{t.quote}”</blockquote>
-                    <figcaption class="r-author">
-                      <span class="r-author-av">{t.name.charAt(0)}</span>
-                      <span class="flex-grow-1">
-                        <strong>{t.name}</strong>
-                        <small>{t.company}</small>
-                      </span>
-                      <i class="bi bi-quote r-mark" aria-hidden="true"></i>
-                    </figcaption>
-                  </figure>
+    <div class="r-grid">
+      <!-- Stage: stacked card deck -->
+      <div data-aos="fade-up" data-aos-delay="100">
+        <div class="r-stage">
+          <div class="r-back r-back-2" aria-hidden="true"></div>
+          <div class="r-back r-back-1" aria-hidden="true"></div>
+          <div class="r-cards" data-r-cards>
+            {testimonials.map((t, i) => (
+              <article class={`r-card${i === 0 ? ' is-active' : ''}`} data-r-card aria-hidden={i === 0 ? 'false' : 'true'}>
+                <div class="r-card-head">
+                  <span class="r-av" style={`--tone:${TONES[i % TONES.length]}`}>{t.name.charAt(0)}</span>
+                  <span class="r-who"><b>{t.name}</b><small>{t.company}</small></span>
+                  <span class="r-quote-icon"><i class="bi bi-quote"></i></span>
                 </div>
-              ))}
-            </div>
+                <div class="r-rating" aria-label={`Rated ${t.rating} out of 5`}>
+                  {stars(t.rating).map((on) => <span class={`r-star${on ? '' : ' is-off'}`}>★</span>)}
+                  <span class="r-rating-num">{t.rating.toFixed(1)}</span>
+                </div>
+                <div class="r-body"><p class="r-quote">{t.quote}</p></div>
+              </article>
+            ))}
           </div>
         </div>
 
         <div class="r-controls">
-          <button class="r-nav" type="button" data-r-prev aria-label="Previous review"><i class="bi bi-chevron-left"></i></button>
-          <div class="r-pagination"></div>
-          <button class="r-nav" type="button" data-r-next aria-label="Next review"><i class="bi bi-chevron-right"></i></button>
+          <div class="r-dots" role="tablist" aria-label="Choose a review">
+            {testimonials.map((t, i) => (
+              <button class={`r-dot${i === 0 ? ' is-active' : ''}`} type="button" data-r-dot aria-label={`Review from ${t.name}`}><span></span></button>
+            ))}
+          </div>
+          <div class="r-navs">
+            <button class="r-nav" type="button" data-r-prev aria-label="Previous review"><i class="bi bi-chevron-left"></i></button>
+            <button class="r-nav" type="button" data-r-next aria-label="Next review"><i class="bi bi-chevron-right"></i></button>
+          </div>
         </div>
       </div>
+
+      <!-- Sidebar: All Reviews -->
+      <aside class="r-side" aria-label="All reviews" data-aos="fade-left" data-aos-delay="160">
+        <p class="r-side-label">All Reviews</p>
+        <div class="r-list">
+          {testimonials.map((t, i) => (
+            <button class={`r-item${i === 0 ? ' is-active' : ''}`} type="button" data-r-item>
+              <span class="r-item-av" style={`--tone:${TONES[i % TONES.length]}`}>{t.name.charAt(0)}</span>
+              <span class="r-item-txt"><b>{t.name}</b><small>{t.company}</small></span>
+              <span class="r-pip"></span>
+            </button>
+          ))}
+        </div>
+        <div class="r-pages">
+          <button class="r-page-nav" type="button" data-r-page-prev aria-label="Previous page"><i class="bi bi-chevron-left"></i></button>
+          <span class="r-page-label">Page <b data-r-page>1</b> / {pages}</span>
+          <button class="r-page-nav" type="button" data-r-page-next aria-label="Next page"><i class="bi bi-chevron-right"></i></button>
+        </div>
+      </aside>
     </div>
+
+    <p class="r-footer"><a href={links.google} target="_blank" rel="noopener">Read all our reviews on Google <i class="bi bi-chevron-right"></i></a></p>
   </div>
 </section>
 
 <script>
-  import Swiper from 'swiper';
-  import { Navigation, Pagination, Autoplay, A11y } from 'swiper/modules';
+  document.querySelectorAll<HTMLElement>('[data-reviews]').forEach((root) => {
+    const per = Number(root.dataset.perPage ?? 6);
+    const cards = [...root.querySelectorAll<HTMLElement>('[data-r-card]')];
+    const dots = [...root.querySelectorAll<HTMLButtonElement>('[data-r-dot]')];
+    const items = [...root.querySelectorAll<HTMLButtonElement>('[data-r-item]')];
+    const pageEl = root.querySelector<HTMLElement>('[data-r-page]');
+    const pagePrev = root.querySelector<HTMLButtonElement>('[data-r-page-prev]');
+    const pageNext = root.querySelector<HTMLButtonElement>('[data-r-page-next]');
+    const total = cards.length;
+    const pages = Math.ceil(total / per);
+    let idx = 0;
 
-  new Swiper('.r-swiper', {
-    modules: [Navigation, Pagination, Autoplay, A11y],
-    slidesPerView: 1,
-    spaceBetween: 24,
-    loop: true,
-    speed: 700,
-    autoplay: { delay: 5500, disableOnInteraction: false, pauseOnMouseEnter: true },
-    navigation: { prevEl: '[data-r-prev]', nextEl: '[data-r-next]' },
-    pagination: { el: '.r-pagination', clickable: true },
+    const showPage = (pg: number) => {
+      dots.forEach((el, i) => el.toggleAttribute('data-off-page', Math.floor(i / per) !== pg));
+      items.forEach((el, i) => el.toggleAttribute('data-off-page', Math.floor(i / per) !== pg));
+      if (pageEl) pageEl.textContent = String(pg + 1);
+      if (pagePrev) pagePrev.disabled = pg === 0;
+      if (pageNext) pageNext.disabled = pg === pages - 1;
+    };
+
+    const go = (next: number, dir: 1 | -1 = 1) => {
+      next = (next + total) % total;
+      if (next === idx) return;
+      cards[idx].classList.remove('is-active', 'from-left');
+      cards[idx].setAttribute('aria-hidden', 'true');
+      idx = next;
+      const c = cards[idx];
+      c.classList.toggle('from-left', dir < 0);
+      c.classList.add('is-active');
+      c.setAttribute('aria-hidden', 'false');
+      dots.forEach((d, i) => d.classList.toggle('is-active', i === idx));
+      items.forEach((it, i) => it.classList.toggle('is-active', i === idx));
+      showPage(Math.floor(idx / per));
+    };
+
+    root.querySelector('[data-r-prev]')?.addEventListener('click', () => go(idx - 1, -1));
+    root.querySelector('[data-r-next]')?.addEventListener('click', () => go(idx + 1, 1));
+    dots.forEach((d, i) => d.addEventListener('click', () => go(i, i < idx ? -1 : 1)));
+    items.forEach((it, i) => it.addEventListener('click', () => go(i, i < idx ? -1 : 1)));
+    pagePrev?.addEventListener('click', () => go((Math.floor(idx / per) - 1) * per, -1));
+    pageNext?.addEventListener('click', () => go((Math.floor(idx / per) + 1) * per, 1));
+
+    // Swipe on touch screens
+    const wrap = root.querySelector<HTMLElement>('[data-r-cards]');
+    let sx = 0;
+    wrap?.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; }, { passive: true });
+    wrap?.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - sx;
+      if (Math.abs(dx) > 40) { if (dx < 0) go(idx + 1, 1); else go(idx - 1, -1); }
+    });
+
+    showPage(0);
   });
 </script>
 
 <style>
-  .reviews {
-    position: relative; overflow: hidden;
-    padding-block: clamp(4rem, 8vw, 6rem);
-    color: var(--slate-50);
-    /* HOE navy with soft slate light (same family as the hero) */
-    background:
-      radial-gradient(ellipse 60% 90% at 70% 60%, #3a4354 0%, #2b3445 25%, #1d2437 50%, #131a2d 72%, #091023 100%);
-  }
+  .reviews { position: relative; overflow: hidden; background: #fff; padding-block: clamp(4rem, 8vw, 6rem); }
+  .r-dots-bg { position: absolute; inset: 0; pointer-events: none; opacity: .5; background-image: radial-gradient(circle, rgb(224 46 46 / .08) 1px, transparent 1px); background-size: 28px 28px; }
+  .r-glow { position: absolute; top: -160px; right: -160px; width: 520px; height: 520px; border-radius: 50%; pointer-events: none; background: radial-gradient(circle, rgb(224 46 46 / .08) 0%, transparent 68%); }
 
-  .r-lede { color: var(--slate-300); font-size: 1.05rem; line-height: 1.7; max-width: 30rem; }
+  /* Header */
+  .r-head { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 24px; margin-bottom: 48px; }
+  .r-h2 { font-size: clamp(26px, 3vw, 38px); font-weight: 500; color: var(--navy); line-height: 1.15; letter-spacing: -.02em; margin: 0; }
+  .r-accent { color: var(--red-600); font-weight: 700; }
+  .r-gbadge { display: flex; align-items: center; gap: 12px; padding: 10px 20px 10px 10px; border-radius: 999px; background: #fff; box-shadow: 0 0 0 1px rgb(0 0 0 / .07), 0 14px 30px -18px rgb(0 0 0 / .25); color: inherit; }
+  .r-gbadge-g { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgb(60 64 67 / .14); color: #ea4335; font-size: 1.1rem; }
+  .r-gbadge-txt { display: grid; grid-template-columns: auto auto; align-items: center; column-gap: 8px; }
+  .r-gbadge-txt b { font-size: 20px; font-weight: 600; letter-spacing: -.02em; color: #202124; }
+  .r-gbadge-stars { font-size: 13px; letter-spacing: 1px; color: #fbbc04; }
+  .r-gbadge-txt small { grid-column: 1 / -1; font-size: 12px; color: #5f6368; }
 
-  /* Avatar stack + rating */
-  .r-proof { display: flex; align-items: center; gap: 1.1rem; margin-top: 1.75rem; }
-  .r-stack { display: flex; }
-  .r-av {
-    width: 3.1rem; height: 3.1rem; border-radius: 50%;
-    display: grid; place-items: center;
-    font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; color: var(--navy);
-    background: #fff; box-shadow: 0 0 0 3px #1d2437;
-  }
-  .r-av + .r-av { margin-left: -.75rem; }
-  .r-av:nth-child(2) { background: var(--slate-200); }
-  .r-av:nth-child(3) { background: var(--slate-300); }
-  .r-av-count { color: #fff; font-size: .82rem; background: var(--grad-cta); }
-  .r-proof-num { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 1.35rem; color: #fff; line-height: 1.2; }
-  .r-stars { color: #fbbf24; font-size: .95rem; letter-spacing: 1px; }
-  .r-proof-txt { margin: .15rem 0 0; color: var(--slate-400); font-size: .88rem; }
+  /* Grid */
+  .r-grid { display: grid; grid-template-columns: 1fr; gap: 32px; }
+  @media (min-width: 1024px) { .r-grid { grid-template-columns: 1fr 300px; gap: 32px 56px; } }
 
-  /* Slider bleeds to the right screen edge, clipped on the left */
-  .r-swiper { overflow: hidden; padding: .5rem 0 2rem; }
-
+  /* Card deck */
+  .r-stage { position: relative; padding-top: 24px; padding-right: 32px; }
+  .r-back { position: absolute; inset: 24px 32px 0 0; border-radius: 20px; }
+  .r-back-1 { transform: translate(10px, -8px) rotate(1.8deg) scale(.972); background: #fafafa; border: 1.5px solid rgb(0 0 0 / .06); box-shadow: 0 4px 12px rgb(0 0 0 / .04); z-index: 1; }
+  .r-back-2 { transform: translate(20px, -16px) rotate(3.2deg) scale(.945); background: #f2f2f4; border: 1.5px solid rgb(0 0 0 / .04); box-shadow: 0 2px 8px rgb(0 0 0 / .03); z-index: 0; }
+  .r-cards { position: relative; height: 380px; z-index: 2; }
   .r-card {
-    height: 100%; display: flex; flex-direction: column;
-    background: #fff; color: var(--navy);
-    border-radius: var(--radius);
-    padding: 2rem 2.25rem 1.75rem;
-    box-shadow: 0 30px 60px -30px rgb(0 0 0 / .6);
+    position: absolute; inset: 0; display: none; flex-direction: column;
+    border-radius: 20px; padding: clamp(24px, 4vw, 36px); overflow: hidden; background: #fff;
+    box-shadow: 0 0 0 1px rgb(60 64 67 / .12), 0 1px 3px rgb(60 64 67 / .1), 0 24px 50px -28px rgb(0 0 0 / .28);
   }
-  .r-card-stars { display: flex; align-items: center; gap: .15rem; color: #f59e0b; font-size: .95rem; margin-bottom: 1.1rem; }
-  .r-card-stars span { margin-left: .5rem; font-weight: 600; font-size: .85rem; color: var(--navy); }
-  /* Show a short excerpt of each review (first 5 lines); full text stays in the page for SEO/screen readers */
-  .r-quote {
-    font-style: italic; font-size: .98rem; line-height: 1.7; color: var(--navy-600); margin: 0 0 1.5rem;
-    display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden;
-  }
-  .r-author { display: flex; align-items: center; gap: .9rem; margin-top: auto; }
-  .r-author-av {
-    flex-shrink: 0; width: 3.2rem; height: 3.2rem; border-radius: 50%;
-    display: grid; place-items: center;
-    font-family: var(--font-display); font-weight: 600; font-size: 1.1rem; color: #fff;
-    background: var(--grad-cta);
-  }
-  .r-author strong { display: block; font-size: 1rem; }
-  .r-author small { display: block; font-size: .85rem; color: var(--slate-500); }
-  .r-mark { font-size: 3rem; line-height: 1; color: var(--red); }
+  .r-card.is-active { display: flex; animation: r-in-right .45s cubic-bezier(.22, 1, .36, 1) both; }
+  .r-card.is-active.from-left { animation-name: r-in-left; }
+  @keyframes r-in-right { from { transform: translateX(28px) scale(.985); opacity: 0; } to { transform: none; opacity: 1; } }
+  @keyframes r-in-left { from { transform: translateX(-28px) scale(.985); opacity: 0; } to { transform: none; opacity: 1; } }
 
-  /* Controls: round buttons + bar pagination */
-  .r-controls { display: flex; align-items: center; justify-content: center; gap: 1.75rem; margin-top: 2rem; }
-  .r-nav {
-    width: 3.5rem; height: 3.5rem; border-radius: 50%; border: 0;
-    display: grid; place-items: center; font-size: 1.25rem; color: #fff;
-    background: var(--grad-cta);
-    transition: transform .25s var(--ease), background .25s;
+  .r-card-head { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+  .r-av { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 50%; background: var(--tone); font-size: 19px; font-weight: 500; color: #fff; }
+  .r-who { display: flex; flex: 1; flex-direction: column; min-width: 0; }
+  .r-who b { font-size: 15px; font-weight: 600; line-height: 1.3; color: #202124; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .r-who small { margin-top: 2px; font-size: 12.5px; color: #70757a; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .r-quote-icon { flex: none; width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; background: var(--brand-soft); color: var(--brand); font-size: 1.1rem; }
+  .r-rating { display: flex; align-items: center; gap: 2px; margin: 18px 0 14px; flex-shrink: 0; font-size: 17px; line-height: 1; }
+  .r-star { color: #fbbc04; }
+  .r-star.is-off { color: #dadce0; }
+  .r-rating-num { margin-left: 8px; font-size: 13px; font-weight: 600; color: #5f6368; }
+  .r-body { flex: 1; overflow-y: auto; padding-right: 10px; scrollbar-width: thin; scrollbar-color: rgb(0 0 0 / .18) transparent; mask-image: linear-gradient(180deg, #000 82%, transparent); }
+  .r-quote { margin: 0; padding-bottom: 28px; font-size: clamp(15px, 1.6vw, 16.5px); line-height: 1.7; color: #3c4043; }
+
+  /* Controls */
+  .r-controls { margin-top: 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .r-dots { display: flex; align-items: center; }
+  .r-dot { padding: 0; border: 0; background: none; min-width: 24px; min-height: 24px; display: flex; align-items: center; justify-content: center; }
+  .r-dot span { display: block; height: 5px; width: 7px; border-radius: 99px; background: rgb(15 23 42 / .2); opacity: .55; transition: width .3s, background-color .3s, opacity .3s; }
+  .r-dot.is-active span { width: 20px; background: var(--brand); opacity: 1; }
+  .r-navs { display: flex; gap: 8px; }
+  .r-nav { width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; padding: 0; border: 1.5px solid rgb(153 0 16 / .22); background: #fff; color: var(--brand); transition: background .2s, color .2s; }
+  .r-nav:hover { background: var(--brand); color: #fff; }
+  [data-off-page] { display: none !important; }
+
+  /* Sidebar */
+  .r-side { display: none; flex-direction: column; }
+  @media (min-width: 1024px) { .r-side { display: flex; } }
+  .r-side-label { font-size: 13px; font-weight: 600; color: var(--slate-500); margin: 0 0 10px; padding-left: 4px; }
+  .r-list { display: flex; flex-direction: column; gap: 4px; }
+  .r-item {
+    width: 100%; display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 11px;
+    text-align: left; border: 1px solid transparent; background: transparent; transition: all .25s ease;
   }
-  .r-nav:hover { transform: scale(1.06); background: var(--red-600); }
-  .r-pagination { position: static !important; width: auto !important; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .4rem; transform: none !important; }
-  .r-pagination :global(.swiper-pagination-bullet) {
-    width: 1.1rem; height: .3rem; border-radius: 999px; margin: 0 !important;
-    background: rgb(255 255 255 / .35); opacity: 1; transition: background .3s, width .3s;
-  }
-  .r-pagination :global(.swiper-pagination-bullet-active) { background: var(--red); width: 2.2rem; }
+  .r-item:hover { background: rgb(0 0 0 / .02); transform: translateX(3px); }
+  .r-item.is-active { background: linear-gradient(135deg, #fff, rgb(153 0 16 / .04)); border-color: rgb(153 0 16 / .16); transform: none; }
+  .r-item-av { display: grid; place-items: center; flex: none; width: 32px; height: 32px; border-radius: 50%; background: var(--tone); color: #fff; font-size: 13px; font-weight: 600; }
+  .r-item.is-active .r-item-av { box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--tone); }
+  .r-item-txt { flex: 1; min-width: 0; }
+  .r-item-txt b { display: block; font-size: 12.5px; font-weight: 600; line-height: 1.2; color: var(--slate-500); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; transition: color .3s; }
+  .r-item.is-active .r-item-txt b { color: var(--navy); }
+  .r-item-txt small { display: block; font-size: 10.5px; color: var(--slate-500); margin-top: 2px; letter-spacing: .03em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .r-pip { width: 6px; height: 6px; border-radius: 50%; background: rgb(15 23 42 / .12); transition: all .22s; }
+  .r-item.is-active .r-pip { background: var(--brand); transform: scale(1.4); }
+  .r-pages { display: flex; align-items: center; gap: 14px; margin-top: 16px; padding-left: 4px; }
+  .r-page-nav { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; padding: 0; border: 1.5px solid rgb(153 0 16 / .22); background: #fff; color: var(--brand); transition: background .2s, color .2s; }
+  .r-page-nav:hover:not(:disabled) { background: var(--brand); color: #fff; }
+  .r-page-nav:disabled { opacity: .3; cursor: not-allowed; }
+  .r-page-label { font-size: 15px; font-weight: 500; color: var(--navy-600); }
+  .r-page-label b { color: var(--red-600); }
+
+  .r-footer { margin: 32px 0 0; text-align: center; font-size: 16px; font-weight: 600; }
+  .r-footer a { color: var(--brand); }
+  .r-footer a:hover { text-decoration: underline; }
 
   @media (max-width: 575.98px) {
-    .r-controls { gap: 1rem; }
-    .r-nav { width: 3rem; height: 3rem; font-size: 1.1rem; }
-    .r-pagination { gap: .3rem; flex-wrap: nowrap; }
-    .r-pagination :global(.swiper-pagination-bullet) { width: .55rem; }
-    .r-pagination :global(.swiper-pagination-bullet-active) { width: 1.3rem; }
+    .r-stage { padding-right: 18px; }
+    .r-back { right: 18px; }
+    .r-cards { height: 420px; }
   }
 </style>

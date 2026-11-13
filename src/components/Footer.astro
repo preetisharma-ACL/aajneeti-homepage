@@ -1,108 +1,126 @@
 ---
-import { company, socials, footerCols, cities, linkFor, cityHref, links } from '../data/site.js';
+// Footer — formatted like aajneeti.social: newsletter card, offices + 3 link columns,
+// grouped "Top Cities We Serve", socials + badges, secure-payment strip, legal row.
+import { company, socials, footerCols, cityGroups, linkFor, links } from '../data/site.js';
 const year = new Date().getFullYear();
 const perks = ['New launches and project updates', 'Demand and price trends by location', 'Lead handling tips and tricks', 'New tools for real estate sales'];
+const socialOrder = ['Instagram', 'YouTube', 'LinkedIn', 'X', 'Facebook'];
+const orderedSocials = socialOrder.map((n) => socials.find((s) => s.name === n)).filter(Boolean);
+// Payment methods shown on aajneeti.social, as logo images (public/images/payments/)
+const payMethods = [
+  { name: 'UPI', src: '/images/payments/upi.svg', w: 46 },
+  { name: 'Visa', src: '/images/payments/visa.svg', w: 46 },
+  { name: 'Mastercard', src: '/images/payments/mastercard.svg', w: 34 },
+  { name: 'RuPay', src: '/images/payments/rupay.svg', w: 60 },
+  { name: 'Net Banking', src: '/images/payments/netbanking.svg', w: 20 },
+];
 ---
 
 <footer class="site-footer">
-  <!-- Newsletter -->
-  <div class="container-hoe">
-    <div class="newsletter" data-aos="fade-up">
-      <div class="row g-4 align-items-center position-relative z-1">
-        <div class="col-lg-7">
-          <p class="eyebrow mb-2">For channel partners and developers</p>
-          <h2 class="title-md text-white mb-3">Know What's Launching Before the Market Does.</h2>
-          <p class="nl-text">
-            Updates from AAJneeti for brokers, channel partners and developers. Get new project launches, where buyer demand and
-            prices are moving, tips to handle and convert leads faster, and the technology real estate sales teams are using now.
-          </p>
-          <ul class="nl-perks list-unstyled m-0">
-            {perks.map((p) => <li><i class="bi bi-check-circle-fill"></i>{p}</li>)}
-          </ul>
-        </div>
-        <div class="col-lg-5">
-          <!-- TODO: connect to the newsletter backend (form action / API endpoint) -->
-          <form class="nl-form" data-newsletter>
-            <label for="nl-email" class="visually-hidden">Email address</label>
-            <input id="nl-email" type="email" required placeholder="Your work email" autocomplete="email" />
-            <button type="submit" class="btn-pill btn-grad">Subscribe <i class="bi bi-send"></i></button>
-          </form>
-          <p class="nl-fine">Free. Unsubscribe anytime. <a href={links.privacy}>Privacy Policy</a></p>
-        </div>
+  <!-- Newsletter card -->
+  <div class="f-wrap f-top">
+    <div class="nl-card">
+      <div class="nl-copy">
+        <p class="nl-eyebrow">For channel partners and developers</p>
+        <h2 class="nl-title">Know What's Launching Before the Market Does.</h2>
+        <p class="nl-text">
+          Updates from AAJneeti for brokers, channel partners and developers. Get new project launches, where buyer demand and
+          prices are moving, tips to handle and convert leads faster, and the technology real estate sales teams are using now.
+        </p>
+        <ul class="nl-perks list-unstyled m-0">
+          {perks.map((p) => <li><span aria-hidden="true">✓</span>{p}</li>)}
+        </ul>
+      </div>
+      <div>
+        <!-- TODO: connect to the newsletter backend (form action / API endpoint) -->
+        <form class="nl-form" data-newsletter>
+          <label for="nl-email" class="visually-hidden">Email address</label>
+          <input id="nl-email" type="email" required placeholder="Enter your email address" autocomplete="email" />
+          <button type="submit">Subscribe</button>
+        </form>
+        <p class="nl-fine">Free. Unsubscribe anytime. <a href={links.privacy}>Privacy Policy</a></p>
       </div>
     </div>
   </div>
 
-  <!-- Columns -->
-  <div class="container-hoe footer-main">
-    <div class="row g-5">
-      <div class="col-lg-4">
-        <img src="/images/logo.webp" alt="AAJneeti Connect Ltd." height="56" class="mb-3" />
-        <p class="footer-tag font-accent">Leads you can trust.<br />Numbers you can check.</p>
-
-        <div class="office-block">
-          <a href={links.officeHref.Noida} class="office-title">Noida Office <i class="bi bi-arrow-up-right"></i></a>
-          <p>{company.address}</p>
-          <a href={company.phoneHref}><i class="bi bi-telephone"></i>{company.phone}</a>
-          <a href={`mailto:${company.email}`}><i class="bi bi-envelope"></i>{company.email}</a>
+  <div class="f-wrap">
+    <!-- Offices + link columns -->
+    <div class="f-grid">
+      <div class="f-offices">
+        <div class="f-office">
+          <a href={links.officeHref.Noida} class="f-head f-head-link">Noida Office <span aria-hidden="true">↗</span></a>
+          <p>AAJneeti Connect Ltd., B-44, First Floor,<br />B Block, Sector 63, Noida,<br />Uttar Pradesh 201301, India</p>
+          <a href={company.phoneHref}>{company.phone}</a>
+          <a href={`mailto:${company.email}`}>{company.email}</a>
         </div>
-        <div class="office-block">
-          <a href={links.officeHref.USA} class="office-title">US Office <i class="bi bi-arrow-up-right"></i></a>
-          <p class="mb-1">USA</p>
-          <a href={`mailto:${company.email}`}><i class="bi bi-envelope"></i>{company.email}</a>
+        <div class="f-office">
+          <a href={links.officeHref.USA} class="f-head f-head-link">US Office <span aria-hidden="true">↗</span></a>
+          <p>USA</p>
+          <a href={`mailto:${company.email}`}>{company.email}</a>
         </div>
-        <a href={links.offices} class="link-more small">See all 6 offices <i class="bi bi-arrow-right"></i></a>
-
-        <div class="d-flex gap-2 mt-4">
-          {socials.map((s) => (
-            <a href={s.href} class="f-social" target="_blank" rel="noopener" aria-label={s.name}><i class={`bi ${s.icon}`}></i></a>
-          ))}
-        </div>
+        <a href={links.offices} class="f-all">See all 6 offices →</a>
       </div>
 
       {footerCols.map((col) => (
-        <div class="col-6 col-md-4 col-lg-2 f-col">
-          <h3 class="f-title">{col.title}</h3>
+        <div class="f-col">
+          <h3 class="f-head">{col.title}</h3>
           <ul class="list-unstyled m-0">
             {col.links.map((l) => <li><a href={linkFor(l)}>{l}</a></li>)}
           </ul>
         </div>
       ))}
+    </div>
 
-      <div class="col-md-12 col-lg-2 f-col">
-        <h3 class="f-title">Trust</h3>
-        <div class="d-flex flex-column gap-2">
-          <span class="trust"><i class="bi bi-flag-fill"></i> Made in India</span>
-          <span class="trust"><i class="bi bi-google"></i> Google Certified Partner</span>
-          <span class="trust"><i class="bi bi-shield-lock-fill"></i> HDFC SmartGateway</span>
+    <!-- Top cities, grouped -->
+    <div class="f-cities">
+      <h3 class="f-head mb-4">Top Cities We Serve</h3>
+      {cityGroups.map((g) => (
+        <div class="f-city-group">
+          <p class="f-group-label"><span class="f-dot" aria-hidden="true"></span>{g.label}</p>
+          <ul class="f-pills list-unstyled">
+            {g.items.map((c) => <li><a href={c.href} class="f-pill" title={`${g.label} in ${c.name}`}>{c.name}</a></li>)}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <!-- Socials + badges -->
+    <div class="f-social-row">
+      <ul class="f-socials list-unstyled m-0">
+        {orderedSocials.map((s) => (
+          <li><a href={s!.href} class="f-social" style={`--sc:${s!.color}`} target="_blank" rel="noopener" aria-label={s!.name} title={s!.name}><i class={`bi ${s!.icon}`}></i></a></li>
+        ))}
+      </ul>
+      <div class="d-flex flex-wrap gap-2">
+        <span class="f-badge">Made in India</span>
+        <span class="f-badge">Google Certified Partner</span>
+      </div>
+    </div>
+
+    <!-- Secure payment strip -->
+    <div class="f-pay">
+      <div class="f-pay-left">
+        <span class="f-pay-icon" aria-hidden="true"><i class="bi bi-lock"></i></span>
+        <div>
+          <div class="f-pay-title">Make a secure payment</div>
+          <div class="f-pay-sub">Secured by HDFC SmartGateway · UPI, cards, net banking &amp; wallets</div>
         </div>
       </div>
-    </div>
-
-    <div class="cities">
-      <h3 class="f-title mb-3">Top Cities We Serve</h3>
-      <div class="d-flex flex-wrap gap-2">
-        {cities.map((c) => <a href={cityHref(c)} class="city-pill">{c}</a>)}
+      <div class="f-pay-right">
+        <ul class="f-pay-methods list-unstyled m-0" aria-label="Accepted payment methods">
+          {payMethods.map((m) => <li class="f-pay-method" title={m.name}><img src={m.src} alt={m.name} width={m.w} height="20" loading="lazy" /></li>)}
+        </ul>
+        <a href={links.payment} class="f-pay-btn">Make payment <i class="bi bi-arrow-right"></i></a>
       </div>
     </div>
 
-    <div class="pay-strip">
-      <span class="pay-icon"><i class="bi bi-credit-card-2-front"></i></span>
-      <div class="flex-grow-1">
-        <strong>Make a secure payment</strong>
-        <small>Secured by HDFC SmartGateway · UPI, cards, net banking &amp; wallets</small>
-      </div>
-      <a href={links.payment} class="btn-pill btn-ghost-dark sm">Make payment <i class="bi bi-arrow-right"></i></a>
-    </div>
-  </div>
-
-  <div class="footer-bottom">
-    <div class="container-hoe d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+    <!-- Legal row -->
+    <div class="f-bottom">
       <p class="m-0">© {year} AAJneeti Connect Ltd. All rights reserved.</p>
-      <nav class="d-flex flex-wrap gap-3" aria-label="Legal">
-        <a href={links.privacy}>Privacy Policy</a>
-        <a href={links.terms}>Terms of Service</a>
-        <a href={links.refund}>Refund Policy</a>
+      <nav class="f-legal" aria-label="Legal">
+        <a href={links.privacy}>Privacy Policy</a><span aria-hidden="true">|</span>
+        <a href={links.terms}>Terms of Service</a><span aria-hidden="true">|</span>
+        <a href={links.refund}>Refund Policy</a><span aria-hidden="true">|</span>
         <a href={links.hr}>HR Policy</a>
       </nav>
     </div>
@@ -117,47 +135,98 @@ const perks = ['New launches and project updates', 'Demand and price trends by l
 </script>
 
 <style>
-  .site-footer { background: #fff; color: var(--navy); border-top: 1px solid var(--slate-100); padding-top: 4rem; }
-  .newsletter {
-    position: relative; overflow: hidden; border-radius: var(--radius-lg);
-    background: var(--grad-band); color: #fff; padding: clamp(2rem, 5vw, 3.5rem);
-  }
-  .newsletter::after { content: ''; position: absolute; left: -8rem; top: -8rem; width: 26rem; height: 26rem; border-radius: 50%; background: radial-gradient(circle, rgb(162 28 175 / .25), transparent 65%); pointer-events: none; z-index: 0; }
-  .nl-text { color: var(--slate-300); font-size: .95rem; line-height: 1.7; }
-  .nl-perks { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem 1.25rem; font-size: .88rem; color: var(--slate-200); }
-  .nl-perks i { color: var(--red); margin-right: .5rem; }
-  .nl-form { display: flex; gap: .5rem; background: #fff; border-radius: 999px; padding: .4rem; }
-  .nl-form input { flex: 1; min-width: 0; border: 0; outline: 0; padding: 0 1rem; font-size: .95rem; background: transparent; color: var(--navy); }
-  .nl-fine { margin: .85rem 0 0 1rem; font-size: .8rem; color: var(--slate-400); }
-  .nl-fine a { color: #fff; text-decoration: underline; }
+  /* Our original footer theme (white, navy text, navy-gradient newsletter card) in the aajneeti.social layout */
+  .site-footer { background: #fff; color: var(--navy); border-top: 1px solid var(--slate-100); }
+  .f-wrap { max-width: 1200px; margin-inline: auto; padding-inline: clamp(1rem, 3vw, 1.5rem); }
+  .f-top { padding-top: clamp(3rem, 5vw, 4rem); }
 
-  .footer-main { padding-block: 4rem 2rem; }
-  .footer-tag { font-size: 1rem; text-transform: uppercase; line-height: 1.15; margin-bottom: 1.5rem; }
-  .office-block { margin-bottom: 1.25rem; font-size: .88rem; }
-  .office-block p { color: var(--navy-600); line-height: 1.6; margin-bottom: .4rem; }
-  .office-block a:not(.office-title) { display: flex; gap: .5rem; color: var(--navy-600); margin-bottom: .25rem; }
-  .office-block a:hover { color: var(--red); }
-  .office-title { font-family: var(--font-display); font-weight: 600; font-size: 1rem; color: var(--navy); display: inline-flex; gap: .35rem; margin-bottom: .35rem; }
-  .f-title { font-family: var(--font-body); font-size: .8rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--slate-500); margin-bottom: 1.1rem; }
+  /* Newsletter card */
+  .nl-card {
+    position: relative; overflow: hidden;
+    display: grid; grid-template-columns: 1fr; align-items: center; gap: 1.5rem;
+    padding: clamp(1.5rem, 4vw, 3rem);
+    border-radius: var(--radius-lg);
+    background: var(--grad-band); color: #fff;
+  }
+  @media (min-width: 992px) { .nl-card { grid-template-columns: 1.5fr 1fr; gap: 2rem; } }
+  .nl-eyebrow { margin: 0 0 .5rem; font-family: var(--font-accent); font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--red); }
+  .nl-title { margin: 0 0 .75rem; font-size: clamp(20px, 2.4vw, 30px); font-weight: 600; line-height: 1.3; color: #fff; }
+  .nl-text { margin: 0 0 1rem; font-size: 14px; line-height: 1.6; color: var(--slate-300); }
+  .nl-perks { display: grid; grid-template-columns: 1fr; gap: .5rem 1.5rem; font-size: 14px; color: var(--slate-200); }
+  @media (min-width: 576px) { .nl-perks { grid-template-columns: 1fr 1fr; } }
+  .nl-perks li { display: flex; gap: .5rem; }
+  .nl-perks span { color: var(--brand-bright); font-weight: 700; }
+  .nl-form { display: flex; flex-direction: column; gap: .5rem; padding: .4rem; border-radius: 999px; background: #fff; }
+  @media (min-width: 576px) { .nl-form { flex-direction: row; } }
+  .nl-form input { flex: 1 1 auto; min-width: 0; height: 3rem; min-height: 3rem; padding: 0 1rem; border: 0; border-radius: 999px; background: transparent; color: var(--navy); font-size: 14px; outline: none; }
+  .nl-form button { flex-shrink: 0; height: 3rem; padding: 0 1.6rem; border: 0; border-radius: 999px; background: var(--brand); color: #fff; font-size: 14px; font-weight: 600; transition: background .2s; }
+  .nl-form button:hover { background: var(--brand-hover); }
+  @media (max-width: 575.98px) { .nl-form { border-radius: var(--radius); } }
+  .nl-fine { margin: .75rem 0 0 1rem; font-size: 12px; color: var(--slate-400); }
+  .nl-fine a { color: #fff; text-decoration: underline; text-underline-offset: 2px; }
+
+  /* Offices + columns */
+  .f-grid { display: grid; grid-template-columns: 1fr; gap: 2.5rem; padding-top: clamp(3rem, 5vw, 4rem); }
+  @media (min-width: 768px) { .f-grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1100px) { .f-grid { grid-template-columns: 1.35fr 1fr 1fr 1fr; gap: 2rem; } }
+  .f-head { display: inline-flex; align-items: center; gap: .35rem; margin: 0 0 1rem; font-family: var(--font-body); font-size: .8rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--slate-500); }
+  .f-head-link { font-family: var(--font-display); font-size: 1rem; letter-spacing: -.01em; text-transform: none; color: var(--navy); }
+  .f-head-link:hover { color: var(--brand); }
+  .f-head-link span { font-size: 12px; color: var(--brand); }
+  .f-office { margin-bottom: 1.5rem; font-size: .88rem; }
+  .f-office p { margin: 0 0 .35rem; line-height: 1.7; color: var(--navy-600); }
+  .f-office a:not(.f-head) { display: block; color: var(--navy-600); line-height: 1.6; }
+  .f-office a:not(.f-head):hover, .f-col a:hover { color: var(--brand); }
+  .f-all { display: inline-flex; font-size: 13px; font-weight: 600; color: var(--navy); }
+  .f-all:hover { color: var(--brand); }
   .f-col li { margin-bottom: .6rem; }
   .f-col a { font-size: .88rem; color: var(--navy-700); }
-  .f-col a:hover { color: var(--red); }
-  .trust { font-size: .82rem; font-weight: 500; display: inline-flex; align-items: center; gap: .5rem; border: 1px solid var(--slate-200); border-radius: .5rem; padding: .5rem .75rem; }
-  .trust i { color: var(--red); }
-  .f-social { width: 2.4rem; height: 2.4rem; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--slate-200); color: var(--navy); }
-  .f-social:hover { background: var(--grad-cta); color: #fff; border-color: transparent; }
 
-  .cities { margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid var(--slate-100); }
-  .city-pill { font-size: .8rem; padding: .35rem .85rem; border-radius: 999px; background: var(--slate-50); border: 1px solid var(--slate-200); color: var(--navy-700); }
-  .city-pill:hover { background: var(--navy); color: #fff; border-color: var(--navy); }
+  /* Cities */
+  .f-cities { margin-top: clamp(2.5rem, 4vw, 3.5rem); }
+  .f-city-group + .f-city-group { margin-top: 1.5rem; }
+  .f-group-label { display: inline-flex; align-items: center; gap: 8px; margin: 0 0 10px; font-size: 11.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--navy-600); }
+  .f-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--brand); box-shadow: 0 0 0 3px rgb(153 0 16 / .15); }
+  .f-pills { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
+  .f-pill {
+    display: inline-flex; align-items: center; padding: .35rem .85rem; border-radius: 999px;
+    font-size: .8rem; color: var(--navy-700); white-space: nowrap;
+    background: var(--slate-50); border: 1px solid var(--slate-200);
+    transition: background .18s, border-color .18s, color .18s;
+  }
+  .f-pill:hover { color: #fff; background: var(--navy); border-color: var(--navy); }
 
-  .pay-strip { margin-top: 2.5rem; display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; padding: 1.25rem 1.5rem; border-radius: var(--radius); background: var(--grad-soft); }
-  .pay-icon { width: 2.8rem; height: 2.8rem; border-radius: .7rem; display: grid; place-items: center; background: #fff; color: var(--red-600); font-size: 1.25rem; }
-  .pay-strip strong { display: block; font-family: var(--font-display); font-weight: 600; }
-  .pay-strip small { color: var(--navy-600); font-size: .82rem; }
+  /* Socials (real brand colours) + badges */
+  .f-social-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.25rem; margin-top: clamp(2.5rem, 4vw, 3rem); }
+  .f-socials { display: flex; gap: 10px; }
+  .f-social {
+    width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%;
+    background: var(--sc); color: #fff; font-size: 1.05rem;
+    transition: transform .2s, opacity .2s;
+  }
+  .f-social:hover { color: #fff; transform: translateY(-2px) scale(1.06); opacity: .9; }
+  .f-badge { padding: .45rem .8rem; border-radius: .5rem; border: 1px solid var(--slate-200); font-size: .8rem; font-weight: 500; color: var(--navy); }
 
-  .footer-bottom { border-top: 1px solid var(--slate-100); padding-block: 1.5rem; font-size: .82rem; color: var(--slate-500); }
-  .footer-bottom a { color: var(--navy-700); }
-  .footer-bottom a:hover { color: var(--red); }
-  @media (max-width: 575.98px) { .nl-perks { grid-template-columns: 1fr; } .nl-form { flex-direction: column; border-radius: var(--radius); } .nl-form input { padding: .75rem 1rem; } }
+  /* Payment strip */
+  .f-pay { display: flex; flex-direction: column; gap: 16px; margin-top: 2rem; padding: 1.25rem 1.5rem; border-radius: var(--radius); background: var(--grad-soft); }
+  @media (min-width: 900px) { .f-pay { flex-direction: row; align-items: center; justify-content: space-between; gap: 24px; } }
+  .f-pay-left { display: flex; align-items: center; gap: 14px; min-width: 0; }
+  .f-pay-icon { flex-shrink: 0; width: 2.8rem; height: 2.8rem; display: grid; place-items: center; border-radius: .7rem; background: #fff; color: var(--brand); font-size: 1.2rem; }
+  .f-pay-title { font-family: var(--font-display); font-weight: 600; color: var(--navy); line-height: 1.3; }
+  .f-pay-sub { font-size: .82rem; color: var(--navy-600); line-height: 1.45; margin-top: 2px; }
+  .f-pay-right { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+  .f-pay-methods { display: flex; flex-wrap: wrap; gap: 8px; }
+  .f-pay-method { display: inline-flex; align-items: center; justify-content: center; height: 34px; min-width: 58px; padding: 0 10px; border-radius: 6px; background: #fff; border: 1px solid var(--slate-200); transition: transform .18s; }
+  .f-pay-method:hover { transform: translateY(-2px); }
+  .f-pay-method img { display: block; height: 18px; width: auto; }
+  .f-pay-btn { display: inline-flex; align-items: center; gap: .5rem; padding: .7rem 1.3rem; border-radius: 999px; background: var(--brand); color: #fff; font-size: .85rem; font-weight: 600; transition: background .2s, transform .2s; }
+  .f-pay-btn:hover { color: #fff; background: var(--brand-hover); transform: translateY(-1px); }
+
+  /* Legal row */
+  .f-bottom { display: flex; flex-direction: column; align-items: center; gap: .75rem; padding: 1.5rem 0 2rem; font-size: .82rem; color: var(--slate-500); text-align: center; }
+  @media (min-width: 768px) { .f-bottom { flex-direction: row; justify-content: space-between; text-align: left; } }
+  .f-legal { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .6rem; }
+  .f-legal a { color: var(--navy-700); }
+  .f-legal a:hover { color: var(--brand); }
+  .f-legal span { color: var(--slate-300); }
 </style>

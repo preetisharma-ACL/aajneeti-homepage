@@ -1,47 +1,84 @@
 ---
+// "Why your money is safe" — rebuilt to match aajneeti.social:
+// a tall section whose sticky content lights up the heading word by word as you scroll.
+const words = 'We treat your ad budget like money we have to answer for.'.split(' ');
 ---
 
-<!-- "Why your money is safe" — light theme -->
-<section class="section money-safe-light" aria-labelledby="mission-title">
-  <div class="container-hoe">
-    <!-- Layout: label on top; heading left half, text right half; spend strip full width below -->
-    <p class="eyebrow ms-eyebrow" data-aos="fade-up">Why your money is safe with us</p>
-
-    <div class="row g-5">
-      <div class="col-lg-6">
-        <h2 id="mission-title" class="title-lg ms-title mb-0" data-aos="fade-up" data-aos-delay="80">
-          We treat your ad budget like money we have to <span class="text-red">answer for.</span>
-        </h2>
-      </div>
-      <div class="col-lg-6">
-        <p class="ms-lede" data-aos="fade-up" data-aos-delay="160">
-          Many agencies earn more when you spend more. Our team is measured on <strong>cost per qualified lead</strong>,
-          not on how much we spend, so it's built to spend less and generate more. Smaller budgets pay per lead and larger
-          budgets work on a retainer, with the same rule either way.
-        </p>
-      </div>
+<section class="mission" id="mission" aria-labelledby="mission-title">
+  <div class="mission-sticky">
+    <div class="container-hoe">
+      <p class="eyebrow mission-eyebrow">Why your money is safe with us</p>
+      <h2 id="mission-title" class="mission-text" aria-label="We treat your ad budget like money we have to answer for.">
+        {words.map((w) => <span class="mw" aria-hidden="true">{w} </span>)}
+      </h2>
+      <p class="mission-sub">
+        Many agencies earn more when you spend more. Our team is measured on cost per qualified lead, not on how much we
+        spend, so it's built to spend less and generate more. Smaller budgets pay per lead and larger budgets work on a
+        retainer, with the same rule either way.
+      </p>
+      <p class="mission-proof">₹300 crore+ of ad spend managed since 2014</p>
     </div>
-
-    <p class="ms-strip" data-aos="fade-up" data-aos-delay="200">
-      <span class="ms-num">₹300 crore+</span>
-      <span class="ms-txt">of ad spend managed since 2014</span>
-    </p>
   </div>
 </section>
 
-<style>
-  .money-safe-light { background: #fff; color: var(--navy); }
-  .ms-title { color: var(--navy); }
-  .ms-eyebrow { margin-bottom: 2.5rem; }
-  .ms-lede { color: var(--navy-600); font-weight: 300; font-size: clamp(1.05rem, 1.4vw, 1.25rem); line-height: 1.7; margin: 0; }
-  .ms-lede strong { color: var(--navy); font-weight: 500; }
-  /* Spend figure as a strip: number + label on one line */
-  .ms-strip {
-    display: flex; flex-wrap: wrap; align-items: center; gap: .4rem 1.1rem;
-    margin: 2.5rem 0 0; padding: 1.25rem 1.75rem;
-    background: #fff1f1;
-    border-radius: var(--radius);
+<script>
+  // Same progress formula as aajneeti.social: words light up as the section scrolls past 60% of the viewport.
+  const section = document.getElementById('mission');
+  const words = section ? [...section.querySelectorAll<HTMLElement>('.mw')] : [];
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let lit = -1;
+  let ticking = false;
+
+  const update = () => {
+    ticking = false;
+    if (!section || !words.length) return;
+    const vh = window.innerHeight;
+    const r = section.getBoundingClientRect();
+    const p = Math.min(1, Math.max(0, (vh * 0.6 - r.top) / (r.height - vh * 0.6)));
+    const n = Math.round(p * words.length);
+    if (n !== lit) {
+      lit = n;
+      words.forEach((w, i) => w.classList.toggle('is-lit', i < n));
+    }
+  };
+
+  if (reduce) words.forEach((w) => w.classList.add('is-lit'));
+  else {
+    const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
   }
-  .ms-num { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.9rem, 3vw, 2.5rem); letter-spacing: -.03em; line-height: 1; color: var(--red-600); }
-  .ms-txt { font-size: 1.05rem; color: var(--navy-600); }
+</script>
+
+<style>
+  .mission { position: relative; height: 190vh; background: #000; } /* same black as aajneeti.social */
+  .mission-sticky { position: sticky; top: 0; display: flex; align-items: center; min-height: 100vh; padding: 110px 0; }
+
+  /* Live-site label: white, sentence case, semibold */
+  .mission-eyebrow { display: block; margin: 0 0 12px; font-family: var(--font-body); font-size: 17px; font-weight: 600; letter-spacing: -.01em; text-transform: none; color: #f5f5f7; }
+  .mission-eyebrow::before, .mission-eyebrow::after { content: none; }
+  .mission-text {
+    margin: 0; max-width: 1060px;
+    font-family: var(--font-display);
+    font-size: clamp(32px, 4.6vw, 64px); font-weight: 700; line-height: 1.1; letter-spacing: -.04em;
+  }
+  .mw { color: #2c2c2e; transition: color .5s var(--ease); }
+  .mw.is-lit { color: #f5f5f7; }
+
+  .mission-sub { margin: 32px 0 0; max-width: 720px; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.55; color: #a1a1a6; }
+  .mission-proof {
+    display: inline-flex; align-items: center; gap: 10px;
+    margin: 22px 0 0; padding: 10px 16px; border-radius: 999px;
+    background: rgb(255 255 255 / .06);
+    font-size: 15px; font-weight: 600; color: #f5f5f7;
+  }
+  .mission-proof::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--brand-hover); }
+
+  @media (max-width: 720px) { .mission { height: 160vh; } }
+  @media (prefers-reduced-motion: reduce) {
+    .mission { height: auto; }
+    .mission-sticky { position: static; min-height: 0; }
+    .mw { color: #f5f5f7; }
+  }
 </style>

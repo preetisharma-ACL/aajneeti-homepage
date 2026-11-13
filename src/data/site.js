@@ -11,11 +11,11 @@ export const company = {
 };
 
 export const socials = [
-  { name: 'Facebook', icon: 'bi-facebook', href: 'https://www.facebook.com/aajneeti.social' },
-  { name: 'X', icon: 'bi-twitter-x', href: 'https://x.com/Aajneeticonnect' },
-  { name: 'YouTube', icon: 'bi-youtube', href: 'https://www.youtube.com/@aajneetiAdvertising' },
-  { name: 'LinkedIn', icon: 'bi-linkedin', href: 'https://www.linkedin.com/company/aajneetimedia' },
-  { name: 'Instagram', icon: 'bi-instagram', href: 'https://www.instagram.com/aajneeti' },
+  { name: 'Facebook', color: '#1877f2', icon: 'bi-facebook', href: 'https://www.facebook.com/aajneeti.social' },
+  { name: 'X', color: '#000000', icon: 'bi-twitter-x', href: 'https://x.com/Aajneeticonnect' },
+  { name: 'YouTube', color: '#ff0000', icon: 'bi-youtube', href: 'https://www.youtube.com/@aajneetiAdvertising' },
+  { name: 'LinkedIn', color: '#0a66c2', icon: 'bi-linkedin', href: 'https://www.linkedin.com/company/aajneetimedia' },
+  { name: 'Instagram', color: 'linear-gradient(45deg, #f58529 0%, #dd2a7b 50%, #8134af 75%, #515bd4 100%)', icon: 'bi-instagram', href: 'https://www.instagram.com/aajneeti' },
 ];
 
 export const topOffices = ['Noida', 'Lucknow', 'Bengaluru', 'Kolkata', 'Dehradun', 'USA'];
@@ -281,3 +281,19 @@ export const links = {
   google: 'https://www.google.com/search?q=AAJneeti+Connect+Ltd+reviews', realtyKnight: 'https://www.youtube.com/@TheRealtyKnight',
   officeHref: { Noida: `${S}/real-estate-lead-generation-in-noida/`, Lucknow: `${S}/real-estate-lead-generation-in-lucknow/`, Bengaluru: `${S}/real-estate-lead-generation-in-bengaluru/`, Kolkata: `${S}/real-estate-lead-generation-in-kolkata/`, Dehradun: `${S}/dehradun/`, USA: `${S}/usa/` },
 };
+
+// Footer "Top Cities We Serve" — grouped exactly as on aajneeti.social
+const cg = (label, items) => ({ label, items: items.map(([name, path]) => ({ name, href: S + path })) });
+export const cityGroups = [
+  cg('Real Estate Lead Generation', [
+    ['India', '/real-estate-lead-generation/'], ['Dubai', '/real-estate-lead-generation-in-dubai/'], ['Gurugram', '/real-estate-lead-generation-in-gurugram/'],
+    ['Pune', '/real-estate-lead-generation-in-pune/'], ['Goa', '/real-estate-lead-generation-in-goa/'], ['Ahmedabad', '/real-estate-lead-generation-in-ahmedabad/'],
+    ['Jaipur', '/real-estate-lead-generation-in-jaipur/'], ['Ayodhya', '/real-estate-lead-generation-in-ayodhya/'], ['Mumbai', '/real-estate-lead-generation-in-mumbai/'],
+    ['Zirakpur', '/real-estate-lead-generation-in-zirakpur/'], ['Chandigarh', '/real-estate-lead-generation-in-chandigarh/'], ['Hyderabad', '/real-estate-lead-generation-in-hyderabad/'],
+    ['Nagpur', '/real-estate-lead-generation-in-nagpur/'], ['Haridwar', '/real-estate-lead-generation-service-in-haridwar/'], ['Chennai', '/real-estate-lead-generation-in-chennai/'],
+    ['Ghaziabad', '/real-estate-lead-generation-in-ghaziabad/'], ['Sonipat', '/real-estate-lead-generation-in-sonipat/'], ['Mohali', '/real-estate-lead-generation-in-mohali/'],
+    ['Indore', '/real-estate-lead-generation-in-indore/'], ['Rishikesh', '/real-estate-lead-generation-service-in-rishikesh/'],
+  ]),
+  cg('Interior Design Lead Generation', [['Mumbai', '/interior-design-lead-generation-in-mumbai/'], ['Bengaluru', '/interior-design-lead-generation-in-bengaluru/']]),
+  cg('Leasing & Coworking Lead Generation', [['Coworking Leasing', '/coworking-leasing-lead-generation-service/']]),
+];

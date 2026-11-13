@@ -1,9 +1,14 @@
 ---
 import { brands } from '../data/site.js';
 
-// 10 visible tiles; the remaining logos rotate in with a dissolve effect.
-const SLOTS = 10;
-const initial = brands.slice(0, SLOTS);
+// Two endless logo rows: row 1 moves right, row 2 moves left.
+// Each row's list is repeated so the loop has no visible restart.
+const half = Math.ceil(brands.length / 2);
+const rows = [
+  { logos: brands.slice(0, half), dir: 'right' },
+  { logos: brands.slice(half), dir: 'left' },
+];
+const REPEAT = 4; // enough copies to fill very wide screens
 ---
 
 <section class="partners" aria-labelledby="partners-title">
@@ -14,71 +19,24 @@ const initial = brands.slice(0, SLOTS);
       <h2 id="partners-title" class="title-lg mb-3">Brands that <span class="text-red">trust us with their leads.</span></h2>
       <p class="partners-sub">200+ developers, channel partners and brands since 2014. Some of the projects we've marketed.</p>
     </div>
+  </div>
 
-    <ul class="partner-grid list-unstyled" data-partners data-logos={JSON.stringify(brands)}>
-      {initial.map((b, i) => (
-        <li class="partner-tile" style={`--d:${i * 90}ms`}>
-          <img class="partner-logo is-current" src={b.src} alt={b.name} loading="lazy" />
-        </li>
-      ))}
-    </ul>
+  <div class="p-rows" data-aos="fade-up" data-aos-delay="100">
+    {rows.map((row) => (
+      <div class={`p-row p-row--${row.dir}`}>
+        <ul class="p-track list-unstyled">
+          {Array.from({ length: REPEAT }).flatMap((_, copy) =>
+            row.logos.map((b) => (
+              <li class="partner-tile" aria-hidden={copy > 0 ? 'true' : undefined}>
+                <img class="partner-logo" src={b.src} alt={copy === 0 ? b.name : ''} loading="lazy" />
+              </li>
+            ))
+          )}
+        </ul>
+      </div>
+    ))}
   </div>
 </section>
-
-<script>
-  type Logo = { name: string; src: string };
-
-  document.querySelectorAll<HTMLElement>('[data-partners]').forEach((grid) => {
-    const logos: Logo[] = JSON.parse(grid.dataset.logos ?? '[]');
-    const tiles = [...grid.querySelectorAll<HTMLLIElement>('.partner-tile')];
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    // 1. Staggered dissolve-in when the grid scrolls into view
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        grid.classList.toggle('is-visible', e.isIntersecting || grid.classList.contains('is-visible'));
-        visible = e.isIntersecting;
-      });
-    }, { threshold: 0.25 });
-    let visible = false;
-    io.observe(grid);
-
-    if (reduce || logos.length <= tiles.length) return;
-
-    // 2. Periodically dissolve one tile into a logo that isn't currently shown
-    const shown = () => tiles.map((t) => t.querySelector<HTMLImageElement>('.is-current')?.getAttribute('src'));
-    let last = -1;
-
-    const swap = () => {
-      if (!visible || document.hidden) return;
-      const onScreen = shown();
-      const pool = logos.filter((l) => !onScreen.includes(l.src));
-      if (!pool.length) return;
-      let idx = Math.floor(Math.random() * tiles.length);
-      if (idx === last) idx = (idx + 1) % tiles.length;
-      last = idx;
-
-      const tile = tiles[idx];
-      const next = pool[Math.floor(Math.random() * pool.length)];
-      const oldImg = tile.querySelector<HTMLImageElement>('.is-current');
-      const img = new Image();
-      img.className = 'partner-logo';
-      img.alt = next.name;
-      img.src = next.src;
-      img.onload = () => {
-        tile.appendChild(img);
-        requestAnimationFrame(() => {
-          oldImg?.classList.remove('is-current');
-          oldImg?.classList.add('is-leaving');
-          img.classList.add('is-current');
-          setTimeout(() => oldImg?.remove(), 1200);
-        });
-      };
-    };
-
-    setInterval(swap, 2200);
-  });
-</script>
 
 <style>
   .partners { position: relative; overflow: hidden; isolation: isolate; background: #fffaf6; padding-block: clamp(4rem, 7vw, 5.5rem); }
@@ -92,47 +50,44 @@ const initial = brands.slice(0, SLOTS);
   @keyframes drift1 { to { transform: translate(8rem, 4rem) scale(1.15); } }
   @keyframes drift2 { to { transform: translate(-10rem, -3rem) scale(1.1); } }
   @keyframes drift3 { to { transform: translate(-6rem, -4rem) scale(1.2); } }
-  @media (prefers-reduced-motion: reduce) { .smoke span { animation: none; } }
+
   .partners-head { max-width: 46rem; margin-bottom: clamp(2.25rem, 4vw, 3rem); }
   .partners-sub { color: var(--navy-600); margin: 0; }
 
-  .partner-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin: 0; }
+  /* Rows */
+  .p-rows { display: flex; flex-direction: column; gap: 1rem; }
+  .p-row {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+  .p-track {
+    display: flex; width: max-content; margin: 0; padding: .25rem 0;
+    will-change: transform;
+    animation: p-left 45s linear infinite;
+  }
+  /* Track holds 4 identical copies; moving by exactly one copy (25%) makes the loop seamless */
+  .p-row--left .p-track { animation-name: p-left; }
+  .p-row--right .p-track { animation-name: p-right; }
+  @keyframes p-left { from { transform: translateX(0); } to { transform: translateX(-25%); } }
+  @keyframes p-right { from { transform: translateX(-25%); } to { transform: translateX(0); } }
+  .p-row:hover .p-track { animation-play-state: paused; }
+
   .partner-tile {
-    position: relative; aspect-ratio: 16 / 9;
+    position: relative; flex: 0 0 auto; margin-right: 1rem; /* margin (not gap) keeps each copy exactly 25% for a seamless loop */
+    width: clamp(10rem, 16vw, 16.5rem); aspect-ratio: 16 / 9;
     background: #fff;
     border: 1px solid var(--slate-200);
     border-radius: var(--radius);
     overflow: hidden;
-    transition: border-color .3s var(--ease), box-shadow .3s var(--ease), transform .3s var(--ease);
-    /* initial state for the dissolve-in */
-    opacity: 0; filter: blur(8px); transform: scale(.96);
+    transition: border-color .3s var(--ease);
   }
-  .partner-grid.is-visible .partner-tile {
-    opacity: 1; filter: blur(0); transform: scale(1);
-    transition: opacity .9s var(--ease) var(--d), filter .9s var(--ease) var(--d), transform .9s var(--ease) var(--d),
-      border-color .3s var(--ease), box-shadow .3s var(--ease);
-  }
-  .partner-tile:hover { border-color: var(--red-200); box-shadow: 0 18px 35px -22px rgb(15 23 42 / .35); }
+  .partner-tile:hover { border-color: rgb(153 0 16 / .3); }
+  .partner-logo { position: absolute; top: 22%; left: 15%; width: 70%; height: 56%; object-fit: contain; }
 
-  /* Logo layers — cross-dissolve (fade + blur) */
-  /* :global — logos added by the rotation script don't carry Astro's scope attribute */
-  .partner-tile :global(.partner-logo) {
-    /* Every logo fits the same box, so all brands read at a similar size */
-    position: absolute; top: 22%; left: 15%;
-    width: 70%; height: 56%; object-fit: contain;
-    opacity: 0; filter: blur(10px); transform: scale(.92);
-    transition: opacity 1.1s var(--ease), filter 1.1s var(--ease), transform 1.1s var(--ease);
-  }
-  .partner-tile :global(.partner-logo.is-current) { opacity: 1; filter: blur(0); transform: scale(1); }
-  .partner-tile :global(.partner-logo.is-leaving) { opacity: 0; filter: blur(10px); transform: scale(1.06); }
-
-  /* Tablet: 4 columns × 2 rows (hide the last 2 tiles so rows stay even) */
-  @media (min-width: 768px) and (max-width: 991.98px) {
-    .partner-grid { grid-template-columns: repeat(4, 1fr); }
-    .partner-tile:nth-child(n + 9) { display: none; }
-  }
-  @media (max-width: 767.98px) { .partner-grid { grid-template-columns: repeat(2, 1fr); gap: .75rem; } }
   @media (prefers-reduced-motion: reduce) {
-    .partner-tile, .partner-tile :global(.partner-logo) { opacity: 1 !important; filter: none !important; transform: none !important; }
+    .smoke span, .p-track { animation: none; }
+    .p-track { flex-wrap: wrap; justify-content: center; width: auto; }
+    .partner-tile[aria-hidden='true'] { display: none; }
   }
 </style>

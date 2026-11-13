@@ -94,7 +94,7 @@ import { nav, socials, links } from '../data/site.js';
     <a href={links.contact} class="btn-pill btn-grad lg mt-4 w-100">Get Started <i class="bi bi-arrow-right"></i></a>
     <div class="d-flex gap-2 mt-auto pt-4">
       {socials.map((s) => (
-        <a href={s.href} class="mob-social" target="_blank" rel="noopener" aria-label={s.name}><i class={`bi ${s.icon}`}></i></a>
+        <a href={s.href} class="mob-social" style={`--sc:${s.color}`} target="_blank" rel="noopener" aria-label={s.name}><i class={`bi ${s.icon}`}></i></a>
       ))}
     </div>
   </div>
@@ -171,10 +171,10 @@ import { nav, socials, links } from '../data/site.js';
   .mob-item { border-bottom: 1px solid var(--slate-100); }
   .mob-link { width: 100%; display: flex; justify-content: space-between; align-items: center; background: none; border: 0; padding: 1rem 0; font-family: var(--font-display); font-weight: 500; font-size: 1.05rem; color: var(--navy); }
   .mob-link .bi { transition: transform .3s; }
-  .mob-link:not(.collapsed) .bi { transform: rotate(45deg); color: var(--red); }
+  .mob-link:not(.collapsed) .bi { transform: rotate(45deg); color: var(--brand); }
   .mob-sub { padding: 0 0 1rem .75rem; margin: 0; }
   .mob-sub a { display: block; padding: .4rem 0; font-size: .9rem; color: var(--navy-600); }
   .mob-sub a:hover { color: var(--red); }
-  .mob-social { width: 2.5rem; height: 2.5rem; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--slate-200); color: var(--navy); }
-  .mob-social:hover { background: var(--red); color: #fff; border-color: var(--red); }
+  .mob-social { width: 2.5rem; height: 2.5rem; border-radius: 50%; display: grid; place-items: center; background: var(--sc); color: #fff; }
+  .mob-social:hover { color: #fff; opacity: .9; }
 </style>

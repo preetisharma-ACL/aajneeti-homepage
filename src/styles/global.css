@@ -26,7 +26,14 @@
   --red-50: #fff8f8;
   --fuchsia: #a21caf;
 
-  --grad-cta: linear-gradient(to top right, var(--fuchsia), var(--red-600));
+  /* AAJneeti brand (logo + aajneeti.social) — used for all buttons and icons */
+  --brand: #990010;          /* primary — logo red */
+  --brand-hover: #b3001b;    /* hover, as on aajneeti.social */
+  --brand-soft: #fbeced;     /* tinted icon backgrounds */
+  --brand-blue: #092341;     /* aajneeti.social blue */
+  --brand-bright: #e0142f;   /* same red, brightened so small icons stay visible on dark sections */
+
+  --grad-cta: linear-gradient(135deg, var(--brand-hover), var(--brand));
   --grad-band: linear-gradient(135deg, var(--navy) 0%, var(--navy-800) 50%, var(--red) 130%);
   --grad-soft: linear-gradient(to right, var(--slate-100), var(--red-50));
 
@@ -120,14 +127,14 @@ img { max-width: 100%; }
 .btn-pill i { transition: transform .3s var(--ease); }
 .btn-pill:hover i { transform: translateX(3px); }
 
-.btn-grad { color: #fff; background: var(--grad-cta); background-size: 150% 150%; box-shadow: 0 10px 25px -10px rgb(224 46 46 / .6); }
-.btn-grad:hover { color: #fff; background: var(--red-600); box-shadow: 0 14px 30px -10px rgb(224 46 46 / .75); transform: translateY(-1px); }
+.btn-grad { color: #fff; background: var(--brand); }
+.btn-grad:hover { color: #fff; background: var(--brand-hover); transform: translateY(-1px); }
 .btn-ghost-light { color: #fff; border-color: rgb(255 255 255 / .3); background: rgb(255 255 255 / .04); backdrop-filter: blur(6px); }
-.btn-ghost-light:hover { color: var(--navy); background: #fff; border-color: #fff; }
-.btn-ghost-dark { color: var(--navy); border-color: var(--navy); background: transparent; }
-.btn-ghost-dark:hover { color: #fff; background: var(--navy); }
+.btn-ghost-light:hover { color: var(--brand-blue); background: #fff; border-color: #fff; }
+.btn-ghost-dark { color: var(--brand-blue); border-color: var(--brand-blue); background: transparent; }
+.btn-ghost-dark:hover { color: #fff; background: var(--brand-blue); }
 .btn-white { color: var(--navy); background: #fff; }
-.btn-white:hover { color: #fff; background: var(--red-600); }
+.btn-white:hover { color: #fff; background: var(--brand); }
 
 .link-more {
   font-weight: 500; font-size: .9rem; color: inherit;
@@ -199,19 +206,19 @@ img { max-width: 100%; }
   padding: .45rem 1rem; font-size: .85rem; font-weight: 500; color: var(--navy);
   background: #fff; transition: all .25s var(--ease);
 }
-.chip:hover { border-color: var(--red); color: var(--red); background: var(--red-50); }
+.chip:hover { border-color: var(--brand); color: var(--brand); background: var(--brand-soft); }
 .section-dark .chip { background: transparent; color: var(--slate-200); border-color: var(--navy-700); }
-.section-dark .chip:hover { border-color: var(--red); color: #fff; background: rgb(255 85 85 / .12); }
+.section-dark .chip:hover { border-color: var(--brand-bright); color: #fff; background: rgb(153 0 16 / .25); }
 
 .num-badge {
   font-family: var(--font-display); font-weight: 600; font-size: .85rem;
   width: 2.75rem; height: 2.75rem; border-radius: 50%;
   display: inline-grid; place-items: center;
-  color: var(--red); background: rgb(255 85 85 / .1); border: 1px solid rgb(255 85 85 / .25);
+  color: var(--brand); background: var(--brand-soft); border: 1px solid rgb(153 0 16 / .25);
 }
 .icon-tile {
   width: 3rem; height: 3rem; border-radius: .75rem; display: inline-grid; place-items: center;
-  font-size: 1.3rem; color: #fff; background: var(--grad-cta); box-shadow: 0 10px 20px -10px rgb(224 46 46 / .7);
+  font-size: 1.3rem; color: #fff; background: var(--brand);
 }
 
 /* Stat */
@@ -239,12 +246,20 @@ img { max-width: 100%; }
   font-family: var(--font-display); font-weight: 500; font-size: 1.08rem; color: var(--navy);
   background: transparent; padding: 1.5rem 0; box-shadow: none; letter-spacing: -0.01em;
 }
-.accordion-hoe .accordion-button:not(.collapsed) { color: var(--red-600); }
+.accordion-hoe .accordion-button:not(.collapsed) { color: var(--brand); }
 .accordion-hoe .accordion-button::after {
   background-image: none; content: '\F64D'; font-family: 'bootstrap-icons'; font-size: 1rem;
   width: 2rem; height: 2rem; border-radius: 50%; display: grid; place-items: center;
   border: 1px solid var(--slate-300); transition: all .3s var(--ease);
 }
-.accordion-hoe .accordion-button:not(.collapsed)::after { content: '\F63B'; transform: none; background: var(--red); border-color: var(--red); color: #fff; }
+.accordion-hoe .accordion-button:not(.collapsed)::after { content: '\F63B'; transform: none; background: var(--brand); border-color: var(--brand); color: #fff; }
 .accordion-hoe .accordion-body { padding: 0 3rem 1.6rem 0; color: var(--navy-600); line-height: 1.7; }
 .accordion-hoe .accordion-body a { color: var(--red-600); text-decoration: underline; }
+
+/* ---------- No shadows on any button ---------- */
+.btn-pill, .btn-pill:hover, .btn-pill:focus,
+.sc-btn, .panel-btn, .r-nav, .r-page-nav, .f-pay-btn, .nl-form button, .lcard-btn, .faq-btn,
+.f-social, .mob-social, .burger { box-shadow: none !important; }
+
+/* Icons placed on dark sections: brightened brand red so they stay visible */
+.icon-on-dark { color: var(--brand-bright) !important; }
