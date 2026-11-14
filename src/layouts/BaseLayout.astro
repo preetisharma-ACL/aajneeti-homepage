@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.min.css';
 import 'lenis/dist/lenis.css';
 import '../styles/global.css';
+import Motion from '../components/Motion.astro';
 
 interface Props {
   title?: string;
@@ -47,12 +48,10 @@ const {
   <body>
     <a href="#content" class="visually-hidden-focusable position-fixed top-0 start-0 m-2 p-2 bg-dark text-white rounded z-3">Skip to content</a>
     <slot />
+    <Motion />
 
     <script>
       import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-      import { initMotion } from '../scripts/motion';
-
-      initMotion();
 
       // Header: transparent over the dark hero, solid white once scrolled (HOE behaviour)
       const header = document.querySelector<HTMLElement>('[data-site-header]');

@@ -42,7 +42,7 @@ import { ctaStats, links, company } from '../data/site.js';
     padding: clamp(2.5rem, 6vw, 6rem) clamp(1.5rem, 5vw, 4rem);
     color: var(--navy);
   }
-  .cta-box::before { content: ''; position: absolute; right: -10rem; bottom: -14rem; width: 36rem; height: 36rem; border-radius: 50%; background: radial-gradient(circle, rgb(255 85 85 / .18), transparent 65%); }
+  .cta-box::before { content: ''; position: absolute; right: -10rem; bottom: -14rem; width: 36rem; height: 36rem; border-radius: 50%; background: radial-gradient(circle, rgb(153 0 16 / .1), transparent 65%); }
   .live-pill { display: inline-flex; align-items: center; gap: .5rem; font-size: .8rem; font-weight: 600; color: #047857; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 999px; padding: .35rem .9rem; }
   .live-pill .dot { width: .5rem; height: .5rem; border-radius: 50%; background: #10b981; animation: blink 1.6s infinite; }
   @keyframes blink { 50% { opacity: .3; } }
@@ -51,5 +51,5 @@ import { ctaStats, links, company } from '../data/site.js';
   .cta-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
   .cta-stat { background: rgb(255 255 255 / .8); backdrop-filter: blur(6px); border: 1px solid #fff; border-radius: var(--radius); padding: 1.5rem; box-shadow: 0 20px 40px -30px rgb(15 23 42 / .4); }
   .cta-stat .stat-value { font-size: clamp(1.5rem, 2.6vw, 2.1rem); color: var(--navy); }
-  .cta-stat:nth-child(1) .stat-value, .cta-stat:nth-child(4) .stat-value { color: var(--red-600); }
+  .cta-stat:nth-child(1) .stat-value, .cta-stat:nth-child(4) .stat-value { color: var(--brand); }
 </style>

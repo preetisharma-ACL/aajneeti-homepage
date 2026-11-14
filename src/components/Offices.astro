@@ -1,67 +1,123 @@
 ---
+// Where we work — intro + stats on the left, office list on the right (layout from the reference snapshot).
 import { offices, officeStats, links } from '../data/site.js';
 ---
 
-<section class="section section-soft" aria-labelledby="off-title">
+<section class="offices" aria-labelledby="off-title">
   <div class="container-hoe">
-    <div class="row g-5 align-items-center">
+    <div class="row g-5 align-items-start">
+      <!-- Left: intro + stats -->
       <div class="col-lg-5">
-        <p class="eyebrow" data-aos="fade-up">Where we work</p>
-        <h2 id="off-title" class="title-lg" data-aos="fade-up" data-aos-delay="80">Noida HQ and <span class="highlight">regional teams.</span></h2>
-        <p class="lede text-slate-600" data-aos="fade-up" data-aos-delay="140">
-          Campaigns for India, Dubai and the US are planned and run from our Noida headquarters, with regional teams who know their local markets.
-        </p>
-        <div class="o-stats" data-aos="fade-up" data-aos-delay="200">
-          {officeStats.map((s) => (
-            <div>
-              <div class="o-val">{s.value}</div>
-              <div class="o-lab">{s.label}</div>
-            </div>
-          ))}
+        <div class="off-intro">
+          <p class="eyebrow" data-aos="fade-up">Where we work</p>
+          <h2 id="off-title" class="off-title" data-aos="fade-up" data-aos-delay="80">
+            Noida HQ and <span class="text-red">regional teams.</span>
+          </h2>
+          <p class="off-lede" data-aos="fade-up" data-aos-delay="140">
+            Campaigns for India, Dubai and the US are planned and run from our Noida headquarters, with regional teams who
+            know their local markets.
+          </p>
+
+          <div class="off-stats" data-aos="fade-up" data-aos-delay="200">
+            {officeStats.map((s) => (
+              <div class="off-stat">
+                <span class="off-stat-val">{s.value}</span>
+                <span class="off-stat-lab">{s.label}</span>
+              </div>
+            ))}
+          </div>
+
+          <a href={links.offices} class="off-all" data-aos="fade-up" data-aos-delay="240">
+            See all 6 offices <i class="bi bi-arrow-right"></i>
+          </a>
         </div>
-        <a href={links.offices} class="link-more mt-4" data-aos="fade-up">See all 6 offices <i class="bi bi-arrow-right"></i></a>
       </div>
 
+      <!-- Right: office list -->
       <div class="col-lg-7">
-        <div class="row g-3">
+        <ul class="off-list list-unstyled">
           {offices.map((o, i) => (
-            <div class="col-sm-6" data-aos="zoom-in" data-aos-delay={String(i * 70)}>
-              <a href={links.officeHref[o.city]} class={`office ${o.tag === 'HQ' ? 'is-hq' : ''}`}>
-                <span class="o-pin"><i class="bi bi-geo-alt-fill"></i></span>
-                <span class="flex-grow-1">
+            <li data-aos="fade-up" data-aos-delay={String(i * 70)}>
+              <a href={links.officeHref[o.city]} class={`off-row${o.tag === 'HQ' ? ' is-hq' : ''}`}>
+                <span class="off-pin"><i class="bi bi-geo-alt"></i></span>
+                <span class="off-text">
                   <strong>{o.city}</strong>
                   <small>{o.desc}</small>
                 </span>
-                <span class={`o-tag tag-${o.tag.toLowerCase()}`}>{o.tag}</span>
+                <span class={`off-tag tag-${o.tag.toLowerCase()}`}>{o.tag}</span>
+                <span class="off-arrow" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></span>
               </a>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </div>
   </div>
 </section>
 
 <style>
-  .o-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--slate-200); }
-  .o-val { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.4rem, 2.4vw, 2rem); letter-spacing: -.03em; color: var(--navy); line-height: 1; }
-  .o-lab { font-size: .8rem; color: var(--slate-500); margin-top: .4rem; }
-  .office {
-    display: flex; align-items: center; gap: 1rem; height: 100%;
-    background: #fff; border: 1px solid var(--slate-200); border-radius: var(--radius);
-    padding: 1.25rem; color: var(--navy);
-    transition: all .3s var(--ease);
+  .offices { background: var(--slate-50); padding-block: clamp(4rem, 8vw, 6rem); }
+  @media (min-width: 992px) { .off-intro { position: sticky; top: 7rem; } }
+
+  /* Left */
+  .off-title { font-size: clamp(2rem, 3.6vw, 2.9rem); line-height: 1.1; letter-spacing: -.035em; color: var(--navy); margin: 0 0 1.1rem; }
+  .off-lede { font-size: clamp(1rem, 1.3vw, 1.15rem); line-height: 1.65; color: var(--navy-600); margin: 0; max-width: 32rem; }
+
+  .off-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2.25rem; }
+  .off-stat { display: flex; flex-direction: column; gap: .35rem; }
+  .off-stat-val { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.5rem, 2.4vw, 2rem); letter-spacing: -.03em; line-height: 1; color: var(--navy); }
+  .off-stat-lab { font-size: .85rem; color: var(--slate-500); }
+
+  .off-all { display: inline-flex; align-items: center; gap: .4rem; margin-top: 2rem; font-weight: 600; font-size: .92rem; color: var(--brand); }
+  .off-all i { transition: transform .25s var(--ease); }
+  .off-all:hover { color: var(--brand-hover); }
+  .off-all:hover i { transform: translateX(4px); }
+
+  /* Right: list with separators */
+  .off-list { margin: 0; border-top: 1px solid var(--slate-200); }
+  .off-list li { border-bottom: 1px solid var(--slate-200); }
+  .off-row {
+    position: relative;
+    display: flex; align-items: center; gap: 1.1rem;
+    padding: 1.35rem 1rem;
+    color: var(--navy);
+    transition: background .3s var(--ease);
   }
-  .office:hover { transform: translateY(-4px); border-color: var(--red-200); box-shadow: 0 20px 40px -20px rgb(15 23 42 / .25); color: var(--navy); }
-  .office strong { display: block; font-family: var(--font-display); font-weight: 600; font-size: 1.1rem; }
-  .office small { display: block; font-size: .82rem; color: var(--slate-500); }
-  .o-pin { width: 2.6rem; height: 2.6rem; border-radius: .6rem; display: grid; place-items: center; background: var(--brand-soft); color: var(--brand); flex-shrink: 0; }
-  .office.is-hq { background: var(--navy); border-color: var(--navy); color: #fff; }
-  .office.is-hq small { color: var(--slate-400); }
-  .office.is-hq .o-pin { background: var(--brand); color: #fff; }
-  .office.is-hq:hover { color: #fff; }
-  .o-tag { font-size: .65rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; border-radius: 999px; padding: .2rem .55rem; }
+  .off-row:hover { background: linear-gradient(90deg, #fff, rgb(255 255 255 / 0)); color: var(--navy); }
+
+  .off-pin {
+    flex-shrink: 0; width: 3rem; height: 3rem; border-radius: 50%;
+    display: grid; place-items: center; font-size: 1.15rem;
+    background: var(--brand-soft); color: var(--brand);
+    transition: background .3s var(--ease), color .3s var(--ease), transform .3s var(--ease);
+  }
+  .off-row:hover .off-pin { background: var(--brand); color: #fff; transform: scale(1.05); }
+  .off-row.is-hq .off-pin { background: var(--brand); color: #fff; }
+
+  .off-text { flex: 1; min-width: 0; transition: transform .3s var(--ease); }
+  .off-row:hover .off-text { transform: translateX(4px); }
+  .off-text strong { display: block; font-family: var(--font-display); font-weight: 600; font-size: 1.3rem; letter-spacing: -.02em; line-height: 1.2; }
+  .off-text small { display: block; margin-top: .2rem; font-size: .95rem; color: var(--slate-500); }
+
+  .off-tag { flex-shrink: 0; padding: .3rem .8rem; border-radius: 999px; font-size: .78rem; font-weight: 600; }
   .tag-hq { background: var(--brand); color: #fff; }
-  .tag-india { background: var(--slate-100); color: var(--navy-600); }
-  .tag-global { background: #ede9fe; color: #6d28d9; }
+  .tag-india { background: var(--brand-soft); color: var(--brand); }
+  .tag-global { background: rgb(9 35 65 / .08); color: var(--brand-blue); }
+
+  .off-arrow {
+    flex-shrink: 0; width: 2.2rem; height: 2.2rem; border-radius: 50%;
+    display: grid; place-items: center; color: var(--brand);
+    opacity: 0; transform: translateX(-6px);
+    transition: opacity .3s var(--ease), transform .3s var(--ease);
+  }
+  .off-row:hover .off-arrow { opacity: 1; transform: none; }
+
+  @media (max-width: 575.98px) {
+    .off-row { padding: 1.1rem .5rem; gap: .85rem; }
+    .off-pin { width: 2.6rem; height: 2.6rem; font-size: 1rem; }
+    .off-text strong { font-size: 1.1rem; }
+    .off-text small { font-size: .85rem; }
+    .off-arrow { display: none; }
+    .off-stats { gap: .75rem; }
+  }
 </style>

@@ -32,6 +32,7 @@
   --brand-soft: #fbeced;     /* tinted icon backgrounds */
   --brand-blue: #092341;     /* aajneeti.social blue */
   --brand-bright: #e0142f;   /* same red, brightened so small icons stay visible on dark sections */
+  --hl: var(--brand);        /* highlight colour (labels, accent words, hovers): logo red on light sections */
 
   --grad-cta: linear-gradient(135deg, var(--brand-hover), var(--brand));
   --grad-band: linear-gradient(135deg, var(--navy) 0%, var(--navy-800) 50%, var(--red) 130%);
@@ -86,7 +87,7 @@ img { max-width: 100%; }
   font-weight: 700;
   letter-spacing: .2em;
   text-transform: uppercase;
-  color: var(--red);
+  color: var(--hl);
   display: inline-flex;
   align-items: center;
   gap: .6rem;
@@ -97,15 +98,15 @@ img { max-width: 100%; }
 .title-lg { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.12; margin-bottom: 1rem; }
 .title-md { font-size: clamp(1.5rem, 2.6vw, 2.25rem); line-height: 1.2; }
 .lede { font-weight: 300; font-size: clamp(1.05rem, 1.4vw, 1.25rem); line-height: 1.65; }
-.text-red { color: var(--red) !important; }
+.text-red { color: var(--hl) !important; }
 .text-slate-300 { color: var(--slate-300) !important; }
 .text-slate-400 { color: var(--slate-400) !important; }
 .text-slate-500 { color: var(--slate-500) !important; }
 .text-slate-600 { color: var(--navy-600) !important; }
 
 /* Emphasised words: coral text, no underline */
-.highlight { color: var(--red); }
-.accent-italic { font-style: normal; color: var(--red); }
+.highlight { color: var(--hl); }
+.accent-italic { font-style: normal; color: var(--hl); }
 
 /* ---------- Buttons (HOE pill) ---------- */
 .btn-pill {
@@ -141,14 +142,19 @@ img { max-width: 100%; }
   display: inline-flex; align-items: center; gap: .35rem;
 }
 .link-more i { transition: transform .25s var(--ease); }
-.link-more:hover { color: var(--red); }
+.link-more:hover { color: var(--hl); }
 .link-more:hover i { transform: translateX(4px); }
 
 /* ---------- Section shells ---------- */
 .section { padding-block: clamp(4rem, 9vw, 6.5rem); position: relative; }
 .section-dark { background: var(--navy); color: var(--slate-50); }
 .section-dark .lede, .section-dark p { color: var(--slate-300); }
-.section-dark p.eyebrow { color: var(--red); }
+.section-dark p.eyebrow { color: var(--hl); }
+
+/* Dark sections keep the lighter coral highlight (logo red is too dark to read on navy/black) */
+.hero, .mission, .section-dark, .platform, .faq-dark, .about-light, .founder-card, .nl-card,
+.site-header[data-scrolled='false'] { --hl: var(--red); }
+.dd-inner { --hl: var(--brand); }
 .section-soft { background: var(--slate-50); }
 .section-blush { background: linear-gradient(180deg, #fff 0%, var(--red-50) 100%); }
 .section-band { background: var(--grad-band); color: var(--slate-50); }
