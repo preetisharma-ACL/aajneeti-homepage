@@ -1,6 +1,14 @@
 ---
 import { links } from '../data/site.js';
 
+// Lead feed — same "real-shaped" leads aajneeti.social cycles through in its hero card
+const leadFeed = [
+  { n: 'Rohit S.', d: '3 BHK · ₹1.2 to 1.5 Cr · Noida Extension' },
+  { n: 'Priya M.', d: 'MBA admission · Lucknow · 2026 intake' },
+  { n: 'Neha G.', d: 'Modular kitchen · Gurugram · ₹6 to 8 L' },
+  { n: 'Farhan A.', d: 'Kerala holiday · 2 travellers · December' },
+];
+
 const proofs = [
   { icon: 'bi-patch-check-fill', text: 'Up to 60% qualified leads' },
   { icon: 'bi-kanban', text: 'Free CRM' },
@@ -36,22 +44,24 @@ const proofs = [
       <a href={links.caseStudies} class="btn-pill btn-glass lg">See case studies <i class="bi bi-play-fill"></i></a>
     </div>
 
-    <p class="hero-note" data-aos="fade-up" data-aos-delay="300">
-      If your project isn't a fit, we'll tell you on the call.
-    </p>
+    <!-- Live lead card: one lit card on the dark field, cycling through new leads -->
+    <div class="lead-wrap" data-aos="fade-up" data-aos-delay="340">
+      <div class="lead-card" data-lead-card data-feed={JSON.stringify(leadFeed)} aria-hidden="true">
+        <span class="lead-app">AAJ</span>
+        <span class="lead-body">
+          <b data-lead-title>New lead in your CRM</b>
+          <span data-lead-text>{leadFeed[0].n} · {leadFeed[0].d}</span>
+        </span>
+        <span class="lead-time">now</span>
+      </div>
+    </div>
 
-    <ul class="hero-proofs list-unstyled" data-aos="fade-up" data-aos-delay="360">
+    <ul class="hero-proofs list-unstyled" data-aos="fade-up" data-aos-delay="400">
       {proofs.map((p) => <li><i class={`bi ${p.icon}`}></i>{p.text}</li>)}
       <li><span class="stars">★★★★★</span>Rated 4.5+ on Google</li>
     </ul>
   </div>
 
-  <!-- Trusted by (HOE: slate-300 text on navy) -->
-  <div class="hero-trusted">
-    <p class="trusted-title">
-      Trusted by <strong>200+</strong> developers, channel partners and brands since 2014
-    </p>
-  </div>
 </section>
 
 <style>
@@ -98,7 +108,7 @@ const proofs = [
     font-size: .85rem; font-weight: 500; color: var(--slate-200);
     padding: .45rem 1.1rem; border-radius: 999px;
     background: rgb(255 255 255 / .08); border: 1px solid rgb(255 255 255 / .12);
-    backdrop-filter: blur(8px); margin-bottom: 1.25rem;
+    margin-bottom: 1.25rem;
   }
 
   .hero-title {
@@ -119,11 +129,9 @@ const proofs = [
     color: #fff;
     background: rgb(255 255 255 / .1);
     border-color: rgb(255 255 255 / .28);
-    backdrop-filter: blur(10px);
   }
   .btn-glass:hover { color: var(--navy); background: #fff; border-color: #fff; }
 
-  .hero-note { margin: .85rem 0 0; font-size: .85rem; color: var(--slate-400); }
 
   .hero-proofs {
     display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem 1.75rem;
@@ -133,16 +141,51 @@ const proofs = [
   .hero-proofs i { color: var(--brand-bright); }
   .stars { color: #fbbf24; letter-spacing: 1px; }
 
-  /* Trusted by */
-  .hero-trusted { position: relative; margin-top: clamp(2.5rem, 4vw, 3.25rem); padding-bottom: 2.5rem; text-align: center; }
-  .trusted-title {
-    font-family: var(--font-display); font-weight: 500; font-size: clamp(.95rem, 1.4vw, 1.1rem);
-    color: var(--slate-300); margin: 0; padding-inline: 1.5rem;
+  /* Live lead card */
+  .lead-wrap { margin-top: 1.75rem; width: 100%; display: flex; justify-content: center; }
+  .lead-card {
+    display: flex; align-items: center; gap: 12px; width: min(100%, 26rem);
+    padding: 10px 14px; border-radius: var(--radius); text-align: left;
+    font-family: var(--font-body);
+    background: rgb(255 255 255 / .06); border: 1px solid rgb(255 255 255 / .12); color: #fff;
   }
-  .trusted-title strong { color: #fff; font-weight: 600; }
+  .lead-card.is-in { animation: leadIn .6s cubic-bezier(.16, 1, .3, 1); }
+  @keyframes leadIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+  .lead-app { flex: none; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 8px; background: var(--brand); font-family: var(--font-display); font-size: 10px; font-weight: 600; color: #fff; }
+  .lead-body { display: flex; flex: 1; flex-direction: column; min-width: 0; line-height: 1.35; }
+  .lead-body b { font-family: var(--font-display); font-size: .85rem; font-weight: 500; white-space: nowrap; }
+  .lead-body span { overflow: hidden; font-size: .82rem; color: var(--slate-300); text-overflow: ellipsis; white-space: nowrap; }
+  .lead-time { flex: none; align-self: flex-start; font-size: .72rem; color: var(--slate-400); }
+
 
   @media (max-width: 767.98px) {
     .hero-proofs { gap: .5rem 1.1rem; font-size: .8rem; }
     .btn-pill.lg { width: 100%; }
   }
 </style>
+
+<script>
+  // Cycle the lead card every 3.2s (as on aajneeti.social); pause when off-screen or tab hidden.
+  const card = document.querySelector<HTMLElement>('[data-lead-card]');
+  const feed: { n: string; d: string }[] = card ? JSON.parse(card.dataset.feed ?? '[]') : [];
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (card && feed.length > 1 && !reduce) {
+    const title = card.querySelector<HTMLElement>('[data-lead-title]');
+    const text = card.querySelector<HTMLElement>('[data-lead-text]');
+    let i = 0;
+    let timer = 0;
+    let visible = true;
+    const next = () => {
+      i = (i + 1) % feed.length;
+      if (title) title.textContent = 'New qualified lead';
+      if (text) text.textContent = `${feed[i].n} · ${feed[i].d}`;
+      card.classList.remove('is-in');
+      void card.offsetWidth; // restart the entry animation
+      card.classList.add('is-in');
+    };
+    const start = () => { if (!timer && visible && !document.hidden) timer = window.setInterval(next, 3200); };
+    const stop = () => { window.clearInterval(timer); timer = 0; };
+    new IntersectionObserver((e) => { visible = e[0].isIntersecting; if (visible) start(); else stop(); }).observe(card);
+    document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+  }
+</script>

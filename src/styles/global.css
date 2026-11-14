@@ -130,7 +130,7 @@ img { max-width: 100%; }
 
 .btn-grad { color: #fff; background: var(--brand); }
 .btn-grad:hover { color: #fff; background: var(--brand-hover); transform: translateY(-1px); }
-.btn-ghost-light { color: #fff; border-color: rgb(255 255 255 / .3); background: rgb(255 255 255 / .04); backdrop-filter: blur(6px); }
+.btn-ghost-light { color: #fff; border-color: rgb(255 255 255 / .3); background: rgb(255 255 255 / .04); }
 .btn-ghost-light:hover { color: var(--brand-blue); background: #fff; border-color: #fff; }
 .btn-ghost-dark { color: var(--brand-blue); border-color: var(--brand-blue); background: transparent; }
 .btn-ghost-dark:hover { color: #fff; background: var(--brand-blue); }

@@ -41,7 +41,7 @@ const rows = [
           <span class="p-second-desc">{second.desc}</span>
         </p>
       )}
-      <div class={`p-row p-row--${row.direction}`} style={`--copies:${row.copies}`} data-aos="fade-up" data-aos-delay="100">
+      <div class={`p-row p-row--${row.direction}`} style={`--copies:${row.copies};--n:${row.logos.length}`} data-aos="fade-up" data-aos-delay="100">
         <ul class="p-track list-unstyled">
           {Array.from({ length: row.copies }).flatMap((_, copy) =>
             row.logos.map((b) => (
@@ -61,17 +61,17 @@ const rows = [
   .partners--smoke { background: #fffaf6; }
   .partners--plain { background: #fff; }
 
-  /* Light, warm smoke: three large blurred haze clouds drifting slowly */
-  .smoke { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
-  .smoke span { position: absolute; border-radius: 50%; filter: blur(70px); }
-  .smoke span:nth-child(1) { width: 42rem; height: 26rem; left: -10rem; top: -6rem; background: radial-gradient(closest-side, #ffd9c2, rgb(255 217 194 / 0)); animation: drift1 22s ease-in-out infinite alternate; }
-  .smoke span:nth-child(2) { width: 38rem; height: 24rem; right: -8rem; top: 20%; background: radial-gradient(closest-side, #ffe6c7, rgb(255 230 199 / 0)); animation: drift2 26s ease-in-out infinite alternate; }
-  .smoke span:nth-child(3) { width: 46rem; height: 22rem; left: 25%; bottom: -10rem; background: radial-gradient(closest-side, #ffd6d6, rgb(255 214 214 / 0)); animation: drift3 30s ease-in-out infinite alternate; }
-  @keyframes drift1 { to { transform: translate(8rem, 4rem) scale(1.15); } }
-  @keyframes drift2 { to { transform: translate(-10rem, -3rem) scale(1.1); } }
-  @keyframes drift3 { to { transform: translate(-6rem, -4rem) scale(1.2); } }
+  /* Light, warm smoke — same three haze clouds as before, drawn as still gradients
+     (blurred, drifting layers were removed as part of the scroll-freeze fix) */
+  .smoke { position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(ellipse 38rem 24rem at 6% 10%, rgb(255 217 194 / .85), rgb(255 217 194 / 0) 70%),
+      radial-gradient(ellipse 34rem 22rem at 96% 42%, rgb(255 230 199 / .9), rgb(255 230 199 / 0) 70%),
+      radial-gradient(ellipse 42rem 20rem at 50% 108%, rgb(255 214 214 / .8), rgb(255 214 214 / 0) 70%);
+  }
+  .smoke span { display: none; }
 
-  .partners-head { max-width: 46rem; margin-bottom: clamp(1.75rem, 3vw, 2.5rem); }
+  .partners-head { max-width: 56rem; margin-bottom: clamp(1.75rem, 3vw, 2.5rem); }
   .partners-sub { color: var(--navy-600); margin: 0; }
 
   /* Small description introducing the second row */
@@ -85,7 +85,7 @@ const rows = [
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
     mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   }
-  .p-track { display: flex; width: max-content; margin: 0; padding: .35rem 0; will-change: transform; animation: p-left 40s linear infinite; }
+  .p-track { display: flex; width: max-content; margin: 0; padding: .35rem 0; will-change: transform; animation: p-left calc(var(--n, 4) * 10s) linear infinite; } /* 10s per logo = same speed on every row */
   .p-row--left .p-track { animation-name: p-left; }
   .p-row--right .p-track { animation-name: p-right; }
   @keyframes p-left { from { transform: translateX(0); } to { transform: translateX(calc(-100% / var(--copies))); } }
@@ -106,7 +106,7 @@ const rows = [
   .partner-logo { position: absolute; top: 17%; left: 14%; width: 72%; height: 66%; object-fit: contain; }
 
   @media (prefers-reduced-motion: reduce) {
-    .smoke span, .p-track { animation: none; }
+    .p-track { animation: none; }
     .p-track { flex-wrap: wrap; justify-content: center; width: auto; }
     .partner-tile[aria-hidden='true'] { display: none; }
   }

@@ -20,11 +20,12 @@ import { caseStudies, links } from '../data/site.js';
       {caseStudies.map((c, i) => (
         <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay={String(i * 120)}>
           <ListingCard
-            href={links.caseStudies}
+            href={c.href}
             img={c.img}
             alt={c.alt}
             pillLeft={c.num}
-            label={`Case Study · ${c.tag}`}
+            pillRight={c.tag}
+            label={c.client}
             title={`${c.num} ${c.title}`}
             footText="Read the case study"
           >

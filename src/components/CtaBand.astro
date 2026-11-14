@@ -44,12 +44,11 @@ import { ctaStats, links, company } from '../data/site.js';
   }
   .cta-box::before { content: ''; position: absolute; right: -10rem; bottom: -14rem; width: 36rem; height: 36rem; border-radius: 50%; background: radial-gradient(circle, rgb(153 0 16 / .1), transparent 65%); }
   .live-pill { display: inline-flex; align-items: center; gap: .5rem; font-size: .8rem; font-weight: 600; color: #047857; background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 999px; padding: .35rem .9rem; }
-  .live-pill .dot { width: .5rem; height: .5rem; border-radius: 50%; background: #10b981; animation: blink 1.6s infinite; }
-  @keyframes blink { 50% { opacity: .3; } }
+  .live-pill .dot { width: .5rem; height: .5rem; border-radius: 50%; background: #10b981; box-shadow: 0 0 0 3px rgb(16 185 129 / .2); }
   .grad-text { background: var(--grad-cta); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .cta-sub { font-size: 1.15rem; font-weight: 300; line-height: 1.7; opacity: .85; margin: 1.5rem 0 2rem; max-width: 38rem; }
   .cta-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .cta-stat { background: rgb(255 255 255 / .8); backdrop-filter: blur(6px); border: 1px solid #fff; border-radius: var(--radius); padding: 1.5rem; box-shadow: 0 20px 40px -30px rgb(15 23 42 / .4); }
+  .cta-stat { background: rgb(255 255 255 / .9); border: 1px solid #fff; border-radius: var(--radius); padding: 1.5rem; box-shadow: 0 20px 40px -30px rgb(15 23 42 / .4); }
   .cta-stat .stat-value { font-size: clamp(1.5rem, 2.6vw, 2.1rem); color: var(--navy); }
   .cta-stat:nth-child(1) .stat-value, .cta-stat:nth-child(4) .stat-value { color: var(--brand); }
 </style>

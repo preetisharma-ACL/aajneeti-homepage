@@ -1,0 +1,91 @@
+---
+// Single featured video, in the About AAJneeti colour theme (charcoal + rust glow).
+// The YouTube player loads only when clicked, so the section adds no weight until then.
+import { links } from '../data/site.js';
+
+const video = {
+  id: 'i92yoM_T9CA', // The Realty Knight — "Sales Unfiltered | Subrat Sagar | Alok Kumar Singh"
+  title: 'Sales Unfiltered with Alok Kumar Singh',
+  thumb: '/images/videos/founder-video.jpg',
+};
+---
+
+<section class="video-feature" aria-labelledby="vf-title">
+  <div class="vf-glow" aria-hidden="true"></div>
+  <div class="container-hoe position-relative">
+    <div class="vf-grid">
+    <header class="vf-head" data-aos="fade-up">
+      <p class="eyebrow">Video and creative</p>
+      <h2 id="vf-title" class="title-lg vf-title">Videos people watch. <span class="text-red">Ads that bring leads.</span></h2>
+      <p class="vf-sub">A few of the ads we've made for real campaigns, with what each one was for and what it delivered.</p>
+      <a href={links.realtyKnight} target="_blank" rel="noopener" class="vf-more"><i class="bi bi-youtube"></i> See more of our work</a>
+    </header>
+
+    <div class="vf-frame-wrap" data-aos="fade-up" data-aos-delay="100">
+      <div class="vf-frame" data-video={video.id} data-title={video.title}>
+        <button type="button" class="vf-play" aria-label={`Play video: ${video.title}`}>
+          <img src={video.thumb} alt="" width="1280" height="720" loading="lazy" />
+          <span class="vf-btn" aria-hidden="true"><i class="bi bi-play-fill"></i></span>
+        </button>
+      </div>
+      <p class="vf-caption">{video.title} · The Realty Knight</p>
+    </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.vf-frame').forEach((box) => {
+    box.querySelector('.vf-play')?.addEventListener('click', () => {
+      const f = document.createElement('iframe');
+      f.src = `https://www.youtube-nocookie.com/embed/${box.dataset.video}?autoplay=1&rel=0`;
+      f.title = box.dataset.title ?? 'Video';
+      f.allow = 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture';
+      f.allowFullscreen = true;
+      box.replaceChildren(f);
+    });
+  });
+</script>
+
+<style>
+  /* Same colours as the About AAJneeti section */
+  .video-feature {
+    position: relative; overflow: hidden;
+    background: #20232b; color: var(--slate-50);
+    padding-block: clamp(3rem, 5vw, 4rem);
+    --hl: var(--red);
+  }
+  .vf-glow {
+    position: absolute; left: -12rem; top: -15rem; width: 34rem; height: 34rem; border-radius: 50%;
+    background: radial-gradient(circle, #8a4230 0%, rgb(128 62 46 / .8) 22%, rgb(87 48 46 / .5) 45%, rgb(32 35 43 / 0) 72%);
+    pointer-events: none;
+  }
+
+  /* Text beside the video on desktop (keeps the section short); stacked on mobile */
+  .vf-grid { display: grid; grid-template-columns: 1fr; gap: 1.75rem; align-items: center; }
+  @media (min-width: 992px) { .vf-grid { grid-template-columns: 5fr 7fr; gap: clamp(2rem, 4vw, 3.5rem); } }
+  .vf-head { max-width: 30rem; }
+  .vf-title { color: #fff; }
+  .vf-sub { margin: 0 0 1.25rem; color: var(--slate-300); font-size: clamp(1rem, 1.3vw, 1.1rem); line-height: 1.65; }
+
+  .vf-frame-wrap { width: 100%; }
+  .vf-frame { position: relative; aspect-ratio: 16 / 9; border-radius: var(--radius-lg); overflow: hidden; background: #000; }
+  .vf-frame :global(iframe) { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .vf-play { position: absolute; inset: 0; padding: 0; border: 0; background: none; cursor: pointer; }
+  .vf-play img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease); }
+  .vf-play:hover img { transform: scale(1.03); }
+  .vf-btn {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: 4rem; height: 4rem; border-radius: 50%; display: grid; place-items: center;
+    font-size: 2.2rem; color: #fff; background: var(--brand);
+    transition: transform .25s var(--ease), background .25s;
+  }
+  .vf-play:hover .vf-btn { transform: translate(-50%, -50%) scale(1.08); background: var(--brand-hover); }
+
+  .vf-caption { margin: .75rem 0 0; font-size: .85rem; color: var(--slate-400); }
+  .vf-more { display: inline-flex; align-items: center; gap: .45rem; font-weight: 500; color: #fff; }
+  .vf-more i { color: var(--brand-bright); }
+  .vf-more:hover { color: var(--red); }
+
+  @media (max-width: 575.98px) { .vf-btn { width: 3.75rem; height: 3.75rem; font-size: 1.7rem; } }
+</style>

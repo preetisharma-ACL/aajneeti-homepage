@@ -5,8 +5,8 @@ const cards = [
   {
     title: 'AAJneeti CRM',
     tags: ['Real-time leads', 'Lead tagging', 'QC checks'],
-    img: '/images/crm-login.webp',
-    alt: 'The AAJneeti CRM sign-in screen',
+    img: '/images/crm-product.jpg', w: 1600, h: 917,
+    alt: 'The AAJneeti CRM: follow-ups due today, lead statuses and monthly lead counts (sample data)',
     heading: 'A CRM your sales team will actually use',
     text: 'Every enquiry lands here the moment the form is filled. Your team tags each lead after the call, and our QC team uses those tags for replacements.',
     features: ['Leads in real time', 'Tagged by campaign', 'QC-checked replacements', 'Fake leads auto-replaced'],
@@ -15,8 +15,8 @@ const cards = [
   {
     title: 'Reporting Dashboard',
     tags: ['Spend', 'Cost per lead', 'Alerts'],
-    img: '/images/dashboard-login.webp',
-    alt: 'The AAJneeti reporting dashboard sign-in screen',
+    img: '/images/dashboard-product.jpg', w: 1600, h: 754,
+    alt: 'The AAJneeti reporting dashboard: spend against allocation, average cost per lead and the project ledger (sample data)',
     heading: 'One login. Your whole campaign.',
     text: 'A monthly PDF never answered the questions clients ask. Log in any time, from any device, and see your projects and nothing else.',
     features: ['Leads at a glance', 'Cost per lead by project', 'Billing you can check', 'Same-day alerts'],
@@ -46,7 +46,7 @@ const cards = [
               <!-- Screenshot in a premium gradient-edged frame -->
               <div class="col-lg-6">
                 <figure class="sc-frame m-0">
-                  <img src={c.img} alt={c.alt} width="1700" height="915" loading="lazy" />
+                  <img src={c.img} alt={c.alt} width={c.w} height={c.h} loading="lazy" />
                 </figure>
               </div>
 

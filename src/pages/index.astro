@@ -12,6 +12,7 @@ import Process from '../components/Process.astro';
 import About from '../components/About.astro';
 import Testimonials from '../components/Testimonials.astro';
 import Founder from '../components/Founder.astro';
+import VideoFeature from '../components/VideoFeature.astro';
 import Offices from '../components/Offices.astro';
 import Insights from '../components/Insights.astro';
 import Faq from '../components/Faq.astro';
@@ -27,12 +28,12 @@ import { developers, channelPartners } from '../data/site.js';
     <Partners
       id="developers"
       eyebrow="Our developers &amp; channel partners clients"
-      title="Projects we've marketed for"
-      titleHl="leading developers."
+      title="Trusted by 200+ developers, channel partners and brands"
+      titleHl="since 2014."
       sub="Campaigns for some of India's most trusted real estate developers, from launches to sustained sales."
       logos={developers}
       direction="left"
-      variant="smoke"
+      variant="plain"
       second={{
         label: 'Channel partners',
         desc: 'Brokers and channel partners we generate qualified leads for.',
@@ -48,6 +49,7 @@ import { developers, channelPartners } from '../data/site.js';
     <Process />
     <Testimonials />
     <Founder />
+    <VideoFeature />
     <Offices />
     <About />
     <Insights />

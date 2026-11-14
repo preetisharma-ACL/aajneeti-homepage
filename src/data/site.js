@@ -128,24 +128,31 @@ export const moreIndustries = [
   { label: 'Automotive', href: `${S}/automobile-lead-generation-services/` },
 ];
 
+// Case studies — real project photos, the actual client/developer, and a link to each published study.
 export const caseStudies = [
   {
     tag: 'Real estate · Event', num: '14', title: 'bookings on the day, no site visit',
+    client: 'Avira Dream Homes Pvt. Ltd.',
     text: 'Patna property showcase for Greater Noida studios: about 800 leads, 250+ investors at the venue and 14 bookings on the day.',
     facts: ['800 leads', '250+ walk-ins'], img: '/images/cases/patna.webp',
-    alt: 'Hotel Patliputra Exotica, Exhibition Road, Patna — venue of the property showcase.',
+    alt: 'Hotel Patliputra Exotica, Exhibition Road, Patna — venue of the Avira Dream Homes property showcase.',
+    href: `${S}/avira-dream-homes-patna-property-showcase-case-study/`,
   },
   {
     tag: 'Real estate · Event', num: '80+', title: 'allotments from our leads',
+    client: 'Bullmen Realty · Developer: Eleque Infra',
     text: 'Dholera plots investors meet at The Leela, Delhi: about 1,700 leads, 300+ investors walked in, and 80+ of the 171 allotments came from our leads.',
     facts: ['1,700+ leads', '300+ walk-ins'], img: '/images/cases/leela.webp',
-    alt: 'Eleque Infra marks 171 allotments on stage at The Leela, Delhi.',
+    alt: 'Eleque Infra marks 171 allotments on stage at The Leela, Delhi, 1 November 2026.',
+    href: `${S}/dholera-investors-meet-case-study/`,
   },
   {
     tag: 'Real estate · Noida', num: '14', title: 'conversions in three months',
-    text: 'Godrej Palm Retreat, low-rise resort-style homes in Sector 150, Noida: 650 leads and 14 conversions in three months.',
-    facts: ['650 leads', '3 months'], img: '/images/cases/godrej.webp',
-    alt: 'A modern two-storey house with a glass front and a lawn, lit up at dusk',
+    client: 'Godrej Properties',
+    text: 'Godrej Palm Retreat, Sector 150, Noida: 650 leads and 14 conversions in three months.',
+    facts: ['650 leads', '3 months'], img: '/images/cases/godrej-palm-retreat.webp',
+    alt: 'Godrej Palm Retreat, Sector 150, Noida — project view.',
+    href: `${S}/godrej-palm-retreat-case-study/`,
   },
 ];
 

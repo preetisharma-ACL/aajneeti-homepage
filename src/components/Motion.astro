@@ -1,19 +1,20 @@
 ---
 /**
- * Site-wide motion: Lenis smooth scrolling + GSAP ScrollTrigger reveals.
+ * Site-wide motion: GSAP ScrollTrigger reveals on native browser scrolling.
+ * (Lenis smooth-scroll was removed: taking over the mouse wheel is the most common cause of
+ *  "page locks after one scroll" reports, and native scrolling runs off the main thread.)
  * Included once in BaseLayout. Renders no markup — only the script below.
  *
  * Reveal targets reuse the existing `data-aos` attributes in the components:
  *   data-aos="fade-up | fade-left | fade-right | fade | zoom-in | zoom-in-up"
  *   data-aos-delay="120"   (milliseconds, used to stagger cards)
- * Respects prefers-reduced-motion (no smooth scroll, no reveals).
+ * Respects prefers-reduced-motion (no reveals).
  */
 ---
 
 <script>
   import gsap from 'gsap';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
-  import Lenis from 'lenis';
 
   gsap.registerPlugin(ScrollTrigger);
 
@@ -33,21 +34,6 @@
   if (reduce) {
     root.classList.remove('gsap-ready');
   } else {
-    // ---- Lenis smooth scroll, driven by GSAP's ticker so ScrollTrigger stays in sync ----
-    const lenis = new Lenis({
-      duration: 1.15,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
-      anchors: { offset: -80 },
-    });
-    lenis.on('scroll', ScrollTrigger.update);
-    gsap.ticker.add((time) => lenis.raf(time * 1000));
-    gsap.ticker.lagSmoothing(0);
-
-    // Pause smooth scroll while Bootstrap menus / modals are open
-    ['show.bs.offcanvas', 'show.bs.modal'].forEach((ev) => document.addEventListener(ev, () => lenis.stop()));
-    ['hidden.bs.offcanvas', 'hidden.bs.modal'].forEach((ev) => document.addEventListener(ev, () => lenis.start()));
-
     // ---- Scroll reveals for content and cards ----
     gsap.utils.toArray<HTMLElement>('[data-aos]').forEach((el) => {
       const type = el.dataset.aos ?? 'fade-up';
