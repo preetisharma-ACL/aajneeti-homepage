@@ -26,23 +26,19 @@ import { developers, channelPartners } from '../data/site.js';
     <Hero />
     <Partners
       id="developers"
-      eyebrow="Our developers"
+      eyebrow="Our developers &amp; channel partners clients"
       title="Projects we've marketed for"
       titleHl="leading developers."
       sub="Campaigns for some of India's most trusted real estate developers, from launches to sustained sales."
       logos={developers}
       direction="left"
       variant="smoke"
-    />
-    <Partners
-      id="channel-partners"
-      eyebrow="Our channel partners"
-      title="Channel partners who"
-      titleHl="grow with us."
-      sub="Brokers and channel partners we generate qualified leads for, project after project."
-      logos={channelPartners}
-      direction="right"
-      variant="plain"
+      second={{
+        label: 'Channel partners',
+        desc: 'Brokers and channel partners we generate qualified leads for.',
+        logos: channelPartners,
+        direction: 'right',
+      }}
     />
     <Mission />
     <Guarantee />

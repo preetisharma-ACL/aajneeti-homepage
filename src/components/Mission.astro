@@ -54,14 +54,16 @@ const words = 'We treat your ad budget like money we have to answer for.'.split(
 <style>
   .mission { position: relative; height: 190vh; background: #000; } /* same black as aajneeti.social */
   .mission-sticky { position: sticky; top: 0; display: flex; align-items: center; min-height: 100vh; padding: 110px 0; }
+  /* Wider column for this section so the big heading wraps into two long lines */
+  .mission .container-hoe { max-width: 1440px; }
 
   /* Live-site label: white, sentence case, semibold */
   .mission-eyebrow { display: block; margin: 0 0 12px; font-family: var(--font-body); font-size: 17px; font-weight: 600; letter-spacing: -.01em; text-transform: none; color: #f5f5f7; }
   .mission-eyebrow::before, .mission-eyebrow::after { content: none; }
   .mission-text {
-    margin: 0; max-width: 1060px;
+    margin: 0; max-width: none;
     font-family: var(--font-display);
-    font-size: clamp(28px, 4vw, 56px); font-weight: 700; line-height: 1.1; letter-spacing: -.04em;
+    font-size: clamp(32px, 5vw, 72px); font-weight: 700; line-height: 1.08; letter-spacing: -.045em;
   }
   .mw { color: #2c2c2e; transition: color .5s var(--ease); }
   .mw.is-lit { color: #f5f5f7; }

@@ -1,6 +1,7 @@
 ---
-// One-row logo marquee section. Used twice on the homepage: "Our developers" and "Our channel partners".
+// Logo marquee section: main row (developers) + optional second row with a small description (channel partners).
 interface Logo { name: string; src: string }
+interface SecondRow { label: string; desc: string; logos: Logo[]; direction?: 'left' | 'right' }
 interface Props {
   id: string;
   eyebrow: string;
@@ -10,11 +11,16 @@ interface Props {
   logos: Logo[];
   direction?: 'left' | 'right';
   variant?: 'smoke' | 'plain';
+  second?: SecondRow;
 }
-const { id, eyebrow, title, titleHl, sub, logos, direction = 'left', variant = 'plain' } = Astro.props;
+const { id, eyebrow, title, titleHl, sub, logos, direction = 'left', variant = 'plain', second } = Astro.props;
 
-// Repeat the list so the row always overflows wide screens; the loop moves by exactly one copy.
-const copies = Math.max(4, Math.ceil(16 / logos.length));
+// Repeat each list so its row always overflows wide screens; the loop moves by exactly one copy.
+const copiesFor = (list: Logo[]) => Math.max(4, Math.ceil(16 / list.length));
+const rows = [
+  { logos, direction, copies: copiesFor(logos) },
+  ...(second ? [{ logos: second.logos, direction: second.direction ?? 'right', copies: copiesFor(second.logos) }] : []),
+];
 ---
 
 <section class={`partners partners--${variant}`} aria-labelledby={`${id}-title`}>
@@ -27,17 +33,27 @@ const copies = Math.max(4, Math.ceil(16 / logos.length));
     </div>
   </div>
 
-  <div class={`p-row p-row--${direction}`} style={`--copies:${copies}`} data-aos="fade-up" data-aos-delay="100">
-    <ul class="p-track list-unstyled">
-      {Array.from({ length: copies }).flatMap((_, copy) =>
-        logos.map((b) => (
-          <li class="partner-tile" aria-hidden={copy > 0 ? 'true' : undefined}>
-            <img class="partner-logo" src={b.src} alt={copy === 0 ? b.name : ''} loading="lazy" />
-          </li>
-        ))
+  {rows.map((row, r) => (
+    <>
+      {r === 1 && second && (
+        <p class="p-second" data-aos="fade-up">
+          <span class="p-second-label">{second.label}</span>
+          <span class="p-second-desc">{second.desc}</span>
+        </p>
       )}
-    </ul>
-  </div>
+      <div class={`p-row p-row--${row.direction}`} style={`--copies:${row.copies}`} data-aos="fade-up" data-aos-delay="100">
+        <ul class="p-track list-unstyled">
+          {Array.from({ length: row.copies }).flatMap((_, copy) =>
+            row.logos.map((b) => (
+              <li class="partner-tile" aria-hidden={copy > 0 ? 'true' : undefined}>
+                <img class="partner-logo" src={b.src} alt={copy === 0 ? b.name : ''} loading="lazy" />
+              </li>
+            ))
+          )}
+        </ul>
+      </div>
+    </>
+  ))}
 </section>
 
 <style>
@@ -58,6 +74,11 @@ const copies = Math.max(4, Math.ceil(16 / logos.length));
   .partners-head { max-width: 46rem; margin-bottom: clamp(1.75rem, 3vw, 2.5rem); }
   .partners-sub { color: var(--navy-600); margin: 0; }
 
+  /* Small description introducing the second row */
+  .p-second { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: .35rem .6rem; margin: 2rem auto 1rem; padding-inline: 1.25rem; text-align: center; }
+  .p-second-label { font-family: var(--font-accent); font-size: .72rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--hl); }
+  .p-second-desc { font-size: .92rem; color: var(--navy-600); }
+
   /* One row, endless */
   .p-row {
     overflow: hidden;
@@ -74,7 +95,7 @@ const copies = Math.max(4, Math.ceil(16 / logos.length));
   /* Smaller logo boxes; margin (not gap) keeps each copy an exact fraction of the track */
   .partner-tile {
     position: relative; flex: 0 0 auto; margin-right: .9rem;
-    width: clamp(8.5rem, 11.5vw, 12.5rem); aspect-ratio: 16 / 10;
+    width: clamp(8.5rem, 11.5vw, 12.5rem); aspect-ratio: 2 / 1;
     background: #fff;
     border: 1px solid var(--slate-200);
     border-radius: var(--radius);
@@ -82,7 +103,7 @@ const copies = Math.max(4, Math.ceil(16 / logos.length));
     transition: border-color .3s var(--ease);
   }
   .partner-tile:hover { border-color: rgb(153 0 16 / .3); }
-  .partner-logo { position: absolute; top: 20%; left: 14%; width: 72%; height: 60%; object-fit: contain; }
+  .partner-logo { position: absolute; top: 17%; left: 14%; width: 72%; height: 66%; object-fit: contain; }
 
   @media (prefers-reduced-motion: reduce) {
     .smoke span, .p-track { animation: none; }
