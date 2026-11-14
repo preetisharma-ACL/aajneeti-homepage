@@ -297,3 +297,8 @@ export const cityGroups = [
   cg('Interior Design Lead Generation', [['Mumbai', '/interior-design-lead-generation-in-mumbai/'], ['Bengaluru', '/interior-design-lead-generation-in-bengaluru/']]),
   cg('Leasing & Coworking Lead Generation', [['Coworking Leasing', '/coworking-leasing-lead-generation-service/']]),
 ];
+
+// Logo groups — same split as aajneeti.social's two logo rows
+const byName = (names) => names.map((n) => brands.find((b) => b.name === n)).filter(Boolean);
+export const developers = byName(['Godrej Properties', 'L&T Realty', 'Prestige Group', 'Sobha Developers', 'M3M India', 'Max Estates', 'Gaurs Group', 'CRC Group']);
+export const channelPartners = byName(['ACE Group', 'Atulyam', 'Elegance Enterprises', 'Jenika Ventures']);

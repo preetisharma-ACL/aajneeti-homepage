@@ -1,49 +1,53 @@
 ---
-import { brands } from '../data/site.js';
+// One-row logo marquee section. Used twice on the homepage: "Our developers" and "Our channel partners".
+interface Logo { name: string; src: string }
+interface Props {
+  id: string;
+  eyebrow: string;
+  title: string;      // plain part of the heading
+  titleHl: string;    // highlighted part (logo red)
+  sub: string;
+  logos: Logo[];
+  direction?: 'left' | 'right';
+  variant?: 'smoke' | 'plain';
+}
+const { id, eyebrow, title, titleHl, sub, logos, direction = 'left', variant = 'plain' } = Astro.props;
 
-// Two endless logo rows: row 1 moves right, row 2 moves left.
-// Each row's list is repeated so the loop has no visible restart.
-const half = Math.ceil(brands.length / 2);
-const rows = [
-  { logos: brands.slice(0, half), dir: 'right' },
-  { logos: brands.slice(half), dir: 'left' },
-];
-const REPEAT = 4; // enough copies to fill very wide screens
+// Repeat the list so the row always overflows wide screens; the loop moves by exactly one copy.
+const copies = Math.max(4, Math.ceil(16 / logos.length));
 ---
 
-<section class="partners" aria-labelledby="partners-title">
-  <div class="smoke" aria-hidden="true"><span></span><span></span><span></span></div>
+<section class={`partners partners--${variant}`} aria-labelledby={`${id}-title`}>
+  {variant === 'smoke' && <div class="smoke" aria-hidden="true"><span></span><span></span><span></span></div>}
   <div class="container-hoe position-relative">
     <div class="text-center mx-auto partners-head" data-aos="fade-up">
-      <p class="eyebrow mb-3">Our partners</p>
-      <h2 id="partners-title" class="title-lg mb-3">Brands that <span class="text-red">trust us with their leads.</span></h2>
-      <p class="partners-sub">200+ developers, channel partners and brands since 2014. Some of the projects we've marketed.</p>
+      <p class="eyebrow mb-3">{eyebrow}</p>
+      <h2 id={`${id}-title`} class="title-lg mb-3">{title} <span class="text-red">{titleHl}</span></h2>
+      <p class="partners-sub">{sub}</p>
     </div>
   </div>
 
-  <div class="p-rows" data-aos="fade-up" data-aos-delay="100">
-    {rows.map((row) => (
-      <div class={`p-row p-row--${row.dir}`}>
-        <ul class="p-track list-unstyled">
-          {Array.from({ length: REPEAT }).flatMap((_, copy) =>
-            row.logos.map((b) => (
-              <li class="partner-tile" aria-hidden={copy > 0 ? 'true' : undefined}>
-                <img class="partner-logo" src={b.src} alt={copy === 0 ? b.name : ''} loading="lazy" />
-              </li>
-            ))
-          )}
-        </ul>
-      </div>
-    ))}
+  <div class={`p-row p-row--${direction}`} style={`--copies:${copies}`} data-aos="fade-up" data-aos-delay="100">
+    <ul class="p-track list-unstyled">
+      {Array.from({ length: copies }).flatMap((_, copy) =>
+        logos.map((b) => (
+          <li class="partner-tile" aria-hidden={copy > 0 ? 'true' : undefined}>
+            <img class="partner-logo" src={b.src} alt={copy === 0 ? b.name : ''} loading="lazy" />
+          </li>
+        ))
+      )}
+    </ul>
   </div>
 </section>
 
 <style>
-  .partners { position: relative; overflow: hidden; isolation: isolate; background: #fffaf6; padding-block: clamp(4rem, 7vw, 5.5rem); }
+  .partners { position: relative; overflow: hidden; isolation: isolate; padding-block: clamp(3.5rem, 6vw, 4.5rem); }
+  .partners--smoke { background: #fffaf6; }
+  .partners--plain { background: #fff; }
 
   /* Light, warm smoke: three large blurred haze clouds drifting slowly */
   .smoke { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
-  .smoke span { position: absolute; border-radius: 50%; filter: blur(70px); opacity: 1; }
+  .smoke span { position: absolute; border-radius: 50%; filter: blur(70px); }
   .smoke span:nth-child(1) { width: 42rem; height: 26rem; left: -10rem; top: -6rem; background: radial-gradient(closest-side, #ffd9c2, rgb(255 217 194 / 0)); animation: drift1 22s ease-in-out infinite alternate; }
   .smoke span:nth-child(2) { width: 38rem; height: 24rem; right: -8rem; top: 20%; background: radial-gradient(closest-side, #ffe6c7, rgb(255 230 199 / 0)); animation: drift2 26s ease-in-out infinite alternate; }
   .smoke span:nth-child(3) { width: 46rem; height: 22rem; left: 25%; bottom: -10rem; background: radial-gradient(closest-side, #ffd6d6, rgb(255 214 214 / 0)); animation: drift3 30s ease-in-out infinite alternate; }
@@ -51,31 +55,26 @@ const REPEAT = 4; // enough copies to fill very wide screens
   @keyframes drift2 { to { transform: translate(-10rem, -3rem) scale(1.1); } }
   @keyframes drift3 { to { transform: translate(-6rem, -4rem) scale(1.2); } }
 
-  .partners-head { max-width: 46rem; margin-bottom: clamp(2.25rem, 4vw, 3rem); }
+  .partners-head { max-width: 46rem; margin-bottom: clamp(1.75rem, 3vw, 2.5rem); }
   .partners-sub { color: var(--navy-600); margin: 0; }
 
-  /* Rows */
-  .p-rows { display: flex; flex-direction: column; gap: 1rem; }
+  /* One row, endless */
   .p-row {
     overflow: hidden;
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
     mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   }
-  .p-track {
-    display: flex; width: max-content; margin: 0; padding: .25rem 0;
-    will-change: transform;
-    animation: p-left 45s linear infinite;
-  }
-  /* Track holds 4 identical copies; moving by exactly one copy (25%) makes the loop seamless */
+  .p-track { display: flex; width: max-content; margin: 0; padding: .35rem 0; will-change: transform; animation: p-left 40s linear infinite; }
   .p-row--left .p-track { animation-name: p-left; }
   .p-row--right .p-track { animation-name: p-right; }
-  @keyframes p-left { from { transform: translateX(0); } to { transform: translateX(-25%); } }
-  @keyframes p-right { from { transform: translateX(-25%); } to { transform: translateX(0); } }
+  @keyframes p-left { from { transform: translateX(0); } to { transform: translateX(calc(-100% / var(--copies))); } }
+  @keyframes p-right { from { transform: translateX(calc(-100% / var(--copies))); } to { transform: translateX(0); } }
   .p-row:hover .p-track { animation-play-state: paused; }
 
+  /* Smaller logo boxes; margin (not gap) keeps each copy an exact fraction of the track */
   .partner-tile {
-    position: relative; flex: 0 0 auto; margin-right: 1rem; /* margin (not gap) keeps each copy exactly 25% for a seamless loop */
-    width: clamp(10rem, 16vw, 16.5rem); aspect-ratio: 16 / 9;
+    position: relative; flex: 0 0 auto; margin-right: .9rem;
+    width: clamp(8.5rem, 11.5vw, 12.5rem); aspect-ratio: 16 / 10;
     background: #fff;
     border: 1px solid var(--slate-200);
     border-radius: var(--radius);
@@ -83,7 +82,7 @@ const REPEAT = 4; // enough copies to fill very wide screens
     transition: border-color .3s var(--ease);
   }
   .partner-tile:hover { border-color: rgb(153 0 16 / .3); }
-  .partner-logo { position: absolute; top: 22%; left: 15%; width: 70%; height: 56%; object-fit: contain; }
+  .partner-logo { position: absolute; top: 20%; left: 14%; width: 72%; height: 60%; object-fit: contain; }
 
   @media (prefers-reduced-motion: reduce) {
     .smoke span, .p-track { animation: none; }

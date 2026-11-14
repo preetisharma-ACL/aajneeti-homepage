@@ -17,13 +17,33 @@ import Insights from '../components/Insights.astro';
 import Faq from '../components/Faq.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Footer from '../components/Footer.astro';
+import { developers, channelPartners } from '../data/site.js';
 ---
 
 <BaseLayout>
   <Header />
   <main id="content">
     <Hero />
-    <Partners />
+    <Partners
+      id="developers"
+      eyebrow="Our developers"
+      title="Projects we've marketed for"
+      titleHl="leading developers."
+      sub="Campaigns for some of India's most trusted real estate developers, from launches to sustained sales."
+      logos={developers}
+      direction="left"
+      variant="smoke"
+    />
+    <Partners
+      id="channel-partners"
+      eyebrow="Our channel partners"
+      title="Channel partners who"
+      titleHl="grow with us."
+      sub="Brokers and channel partners we generate qualified leads for, project after project."
+      logos={channelPartners}
+      direction="right"
+      variant="plain"
+    />
     <Mission />
     <Guarantee />
     <Industries />
