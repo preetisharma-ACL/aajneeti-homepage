@@ -3,8 +3,8 @@ import { links } from '../data/site.js';
 
 const proofs = [
   { icon: 'bi-patch-check-fill', text: 'Up to 60% qualified leads' },
-  { icon: 'bi-kanban', text: 'Free CRM' },
-  { icon: 'bi-graph-up-arrow', text: 'Live dashboard' },
+  { icon: 'bi-kanban', text: 'Free CRM', href: links.crm },
+  { icon: 'bi-graph-up-arrow', text: 'Live dashboard', href: links.dashboard },
 ];
 
 const steps = ['You ask', 'We forecast, honestly', 'The number goes in the contract', 'We replace, or we refund'];
@@ -19,7 +19,15 @@ const steps = ['You ask', 'We forecast, honestly', 'The number goes in the contr
   <div class="hx-wrap">
     <div class="hx-lede">
       <ul class="hx-proofs hx-fade hx-f1">
-        {proofs.map((p) => <li><i class={`bi ${p.icon}`} aria-hidden="true"></i>{p.text}</li>)}
+        {proofs.map((p) => (
+          <li>
+            {p.href ? (
+              <a href={p.href} target="_blank" rel="noopener"><i class={`bi ${p.icon}`} aria-hidden="true"></i>{p.text}</a>
+            ) : (
+              <><i class={`bi ${p.icon}`} aria-hidden="true"></i>{p.text}</>
+            )}
+          </li>
+        ))}
         <li>
           <span class="stars" role="img" aria-label="4.5 out of 5 stars"><span aria-hidden="true">★★★★</span><span class="star-half" aria-hidden="true">★</span></span>
           Rated 4.5+ on Google
@@ -116,6 +124,8 @@ const steps = ['You ask', 'We forecast, honestly', 'The number goes in the contr
   }
   .hx-proofs li { display: inline-flex; align-items: center; gap: 8px; }
   .hx-proofs i { color: var(--red); font-size: 1.05em; }
+  .hx .hx-proofs a { display: inline-flex; align-items: center; gap: 8px; color: inherit; transition: color .2s ease; }
+  .hx .hx-proofs a:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--red); }
   .hx-proofs .stars { color: #fbbf24; letter-spacing: 1px; --star-on: #fbbf24; --star-off: rgb(255 255 255 / .25); }
 
   .hx-title {
@@ -166,7 +176,7 @@ const steps = ['You ask', 'We forecast, honestly', 'The number goes in the contr
   }
   @keyframes hx-wipe { to { clip-path: inset(0 0 0 0); } }
   .hx-band img {
-    display: block; width: 100%; max-width: none; height: clamp(240px,34vw,420px); object-fit: cover; object-position: center 60%;
+    display: block; width: 100%; max-width: none; height: 520px; object-fit: cover; object-position: center 60%;
     filter: grayscale(.55) contrast(1.08) brightness(.92);
     transform: scale(1.02); transition: filter 1.6s ease, transform 12s ease;
   }
@@ -258,6 +268,7 @@ const steps = ['You ask', 'We forecast, honestly', 'The number goes in the contr
     .hx-proofs { gap: 8px 16px; font-size: 13px; }
   }
   @media (max-width: 700px) {
+    .hx-band img { height: clamp(260px,70vw,420px); }
     .hx-btn { flex: 1; justify-content: center; padding: 16px 18px; }
     .hx-cap { flex-direction: column; gap: 6px; }
   }
