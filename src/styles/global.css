@@ -269,3 +269,11 @@ img { max-width: 100%; }
 
 /* Icons placed on dark sections: brightened brand red so they stay visible */
 .icon-on-dark { color: var(--brand-bright) !important; }
+
+/* Half star for 4.5 ratings: left half in the star colour, right half empty.
+   Set --star-on / --star-off on the parent to match its context. */
+.star-half {
+  background: linear-gradient(90deg, var(--star-on, #fbbf24) 50%, var(--star-off, rgb(255 255 255 / .25)) 50%);
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent;
+}

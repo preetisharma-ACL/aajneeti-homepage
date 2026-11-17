@@ -58,7 +58,7 @@ const proofs = [
 
     <ul class="hero-proofs list-unstyled" data-aos="fade-up" data-aos-delay="400">
       {proofs.map((p) => <li><i class={`bi ${p.icon}`}></i>{p.text}</li>)}
-      <li><span class="stars">★★★★★</span>Rated 4.5+ on Google</li>
+      <li><span class="stars" role="img" aria-label="4.5 out of 5 stars"><span aria-hidden="true">★★★★</span><span class="star-half" aria-hidden="true">★</span></span>Rated 4.5+ on Google</li>
     </ul>
   </div>
 
@@ -139,7 +139,7 @@ const proofs = [
   }
   .hero-proofs li { display: inline-flex; align-items: center; gap: .45rem; }
   .hero-proofs i { color: var(--brand-bright); }
-  .stars { color: #fbbf24; letter-spacing: 1px; }
+  .stars { color: #fbbf24; letter-spacing: 1px; --star-on: #fbbf24; --star-off: rgb(255 255 255 / .25); }
 
   /* Live lead card */
   .lead-wrap { margin-top: 1.75rem; width: 100%; display: flex; justify-content: center; }
