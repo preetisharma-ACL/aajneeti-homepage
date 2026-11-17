@@ -120,7 +120,8 @@ img { max-width: 100%; }
   line-height: 1.2;
   white-space: nowrap;
   border: 1px solid transparent;
-  transition: all .3s var(--ease);
+  /* Named properties, not "all": cheaper, and never animates opacity during scroll reveals */
+  transition: background-color .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease), transform .3s var(--ease);
   cursor: pointer;
 }
 .btn-pill.sm { --pad-y: .6rem; --pad-x: 1.4rem; font-size: .85rem; }
@@ -238,7 +239,7 @@ img { max-width: 100%; }
 @keyframes marquee { to { transform: translateX(-50%); } }
 
 /* ---------- Scroll reveals (GSAP) — hidden until animated in ---------- */
-.gsap-ready [data-aos] { opacity: 0; visibility: hidden; }
+.gsap-ready [data-aos]:not(.aos-in) { opacity: 0; visibility: hidden; }
 
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {

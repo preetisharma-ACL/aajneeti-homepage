@@ -1,58 +1,73 @@
 ---
 /**
- * Site-wide motion: GSAP ScrollTrigger reveals on native browser scrolling.
- * (Lenis smooth-scroll was removed: taking over the mouse wheel is the most common cause of
- *  "page locks after one scroll" reports, and native scrolling runs off the main thread.)
- * Included once in BaseLayout. Renders no markup — only the script below.
+ * Site-wide scroll reveals, built for smooth scrolling on mid-range phones.
  *
- * Reveal targets reuse the existing `data-aos` attributes in the components:
- *   data-aos="fade-up | fade-left | fade-right | fade | zoom-in | zoom-in-up"
+ * - ONE shared IntersectionObserver for every [data-aos] element (no scroll listeners, no per-element triggers).
+ * - Each reveal is a Web Animations API animation of opacity + transform only, so it runs on the compositor.
+ * - Nothing runs once an element has been revealed (it is unobserved), and nothing runs per frame while idle.
+ *   (GSAP + ScrollTrigger were replaced: their ticker kept a requestAnimationFrame loop running 60×/s for the
+ *    whole visit, and their per-frame inline styles restarted the CSS transitions on buttons on every frame.)
+ *
+ * Reveal targets use the existing attributes in the components:
+ *   data-aos="fade-up | fade-down | fade-left | fade-right | fade | zoom-in | zoom-in-up"
  *   data-aos-delay="120"   (milliseconds, used to stagger cards)
- * Respects prefers-reduced-motion (no reveals).
+ * Respects prefers-reduced-motion (no reveals). Included once in BaseLayout; renders no markup.
  */
 ---
 
 <script>
-  import gsap from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-  gsap.registerPlugin(ScrollTrigger);
-
-  const FROM: Record<string, gsap.TweenVars> = {
-    'fade-up': { y: 40 },
-    'fade-down': { y: -40 },
-    'fade-left': { x: 50 },
-    'fade-right': { x: -50 },
-    fade: {},
-    'zoom-in': { scale: 0.92 },
-    'zoom-in-up': { scale: 0.94, y: 40 },
+  const FROM: Record<string, string> = {
+    'fade-up': 'translate3d(0, 40px, 0)',
+    'fade-down': 'translate3d(0, -40px, 0)',
+    'fade-left': 'translate3d(50px, 0, 0)',
+    'fade-right': 'translate3d(-50px, 0, 0)',
+    fade: 'none',
+    'zoom-in': 'scale(.92)',
+    'zoom-in-up': 'translate3d(0, 40px, 0) scale(.94)',
   };
+  const EASE = 'cubic-bezier(.22, 1, .36, 1)'; // close to GSAP power3.out
 
   const root = document.documentElement;
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const targets = [...document.querySelectorAll<HTMLElement>('[data-aos]')];
 
-  if (reduce) {
-    root.classList.remove('gsap-ready');
+  if (reduce || !('IntersectionObserver' in window) || !Element.prototype.animate) {
+    root.classList.remove('gsap-ready'); // show everything, no motion
   } else {
-    // ---- Scroll reveals for content and cards ----
-    gsap.utils.toArray<HTMLElement>('[data-aos]').forEach((el) => {
-      const type = el.dataset.aos ?? 'fade-up';
-      const delay = (parseInt(el.dataset.aosDelay ?? '0', 10) || 0) / 1000;
-      gsap.set(el, { autoAlpha: 0, ...(FROM[type] ?? FROM['fade-up']) });
-      ScrollTrigger.create({
-        trigger: el,
-        start: 'top 90%',
-        once: true,
-        onEnter: () =>
-          gsap.to(el, {
-            autoAlpha: 1, x: 0, y: 0, scale: 1,
-            duration: 0.95, delay, ease: 'power3.out',
-            clearProps: 'transform', // hand transforms back to CSS hover effects
-          }),
-      });
-    });
+    const io = new IntersectionObserver(
+      (entries) => {
+        const show: { el: HTMLElement; animate: boolean }[] = [];
+        for (const e of entries) {
+          if (!e.isIntersecting && e.boundingClientRect.top > 0) continue; // still below the fold
+          io.unobserve(e.target);
+          // Elements already scrolled past (e.g. after a reload mid-page) appear at once, without animating
+          show.push({ el: e.target as HTMLElement, animate: e.isIntersecting });
+        }
+        if (!show.length) return;
 
+        // Writes first: switch off CSS transitions so un-hiding doesn't start a competing opacity transition
+        for (const { el } of show) {
+          el.dataset.prevTransition = el.style.transition;
+          el.style.transition = 'none';
+          el.classList.add('aos-in');
+        }
+        // One style flush for the whole batch
+        void getComputedStyle(show[0].el).opacity;
+
+        for (const { el, animate } of show) {
+          const restore = () => { el.style.transition = el.dataset.prevTransition ?? ''; delete el.dataset.prevTransition; };
+          if (!animate) { restore(); continue; }
+          const delay = parseInt(el.dataset.aosDelay ?? '0', 10) || 0;
+          const from = FROM[el.dataset.aos ?? 'fade-up'] ?? FROM['fade-up'];
+          // Single "from" keyframe: the element animates to its own underlying styles
+          const anim = el.animate([{ opacity: 0, transform: from, offset: 0 }], { duration: 900, delay, easing: EASE, fill: 'backwards' });
+          anim.finished.then(restore, restore);
+        }
+      },
+      { rootMargin: '0px 0px -10% 0px', threshold: 0 },
+    );
+
+    targets.forEach((el) => io.observe(el));
     root.classList.add('motion-on');
-    window.addEventListener('load', () => ScrollTrigger.refresh());
   }
 </script>

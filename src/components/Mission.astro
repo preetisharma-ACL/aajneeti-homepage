@@ -43,16 +43,22 @@ const words = 'We treat your ad budget like money we have to answer for.'.split(
   };
 
   if (reduce) words.forEach((w) => w.classList.add('is-lit'));
-  else {
+  else if (section) {
+    // The scroll listener is attached only while the section is on screen, so the rest of the page pays nothing.
     const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    update();
+    let on = false;
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !on) { on = true; window.addEventListener('scroll', onScroll, { passive: true }); onScroll(); }
+      else if (!e.isIntersecting && on) { on = false; window.removeEventListener('scroll', onScroll); onScroll(); }
+    }).observe(section);
+    window.addEventListener('resize', onScroll, { passive: true });
   }
 </script>
 
 <style>
-  .mission { position: relative; height: 190vh; background: #000; } /* same black as aajneeti.social */
+  /* contain: paint keeps the sticky panel's "might overlap" area inside this section, so the browser
+     doesn't promote the following sections into one huge GPU layer (5,000px+ tall on phones). */
+  .mission { position: relative; height: 190vh; background: #000; contain: paint; } /* same black as aajneeti.social */
   .mission-sticky { position: sticky; top: 0; display: flex; align-items: center; min-height: 100vh; padding: 110px 0; }
   /* Wider column for this section so the big heading wraps into two long lines */
   .mission .container-hoe { max-width: 1440px; }

@@ -1,191 +1,270 @@
 ---
 import { links } from '../data/site.js';
 
-// Lead feed — same "real-shaped" leads aajneeti.social cycles through in its hero card
-const leadFeed = [
-  { n: 'Rohit S.', d: '3 BHK · ₹1.2 to 1.5 Cr · Noida Extension' },
-  { n: 'Priya M.', d: 'MBA admission · Lucknow · 2026 intake' },
-  { n: 'Neha G.', d: 'Modular kitchen · Gurugram · ₹6 to 8 L' },
-  { n: 'Farhan A.', d: 'Kerala holiday · 2 travellers · December' },
-];
-
 const proofs = [
   { icon: 'bi-patch-check-fill', text: 'Up to 60% qualified leads' },
   { icon: 'bi-kanban', text: 'Free CRM' },
   { icon: 'bi-graph-up-arrow', text: 'Live dashboard' },
 ];
+
+const steps = ['You ask', 'We forecast, honestly', 'The number goes in the contract', 'We replace, or we refund'];
 ---
 
 <!--
-  Layout: centred hero (badge → headline → subtext → buttons → "trusted by" + logos).
-  Colours: House of Education hero — deep navy edges (#091023) with a softly lit slate backdrop (#424b5a),
-  sampled from houseofeducation.com's hero image. Pink/red appears only in the CTA, exactly as on HOE.
+  Hero: ported 1:1 from the standalone index.html design (black field, Archivo type, red accent).
+  Class names carry an `hx-` prefix so they never collide with Bootstrap (.btn, .fade) or global.css (.lede).
+  The site's live <Header /> replaces the reference nav from index.html.
 -->
-<section class="hero" aria-labelledby="hero-title">
+<section class="hx" aria-labelledby="hero-title">
+  <div class="hx-wrap">
+    <div class="hx-lede">
+      <ul class="hx-proofs hx-fade hx-f1">
+        {proofs.map((p) => <li><i class={`bi ${p.icon}`} aria-hidden="true"></i>{p.text}</li>)}
+        <li>
+          <span class="stars" role="img" aria-label="4.5 out of 5 stars"><span aria-hidden="true">★★★★</span><span class="star-half" aria-hidden="true">★</span></span>
+          Rated 4.5+ on Google
+        </li>
+      </ul>
 
-  <div class="hero-light" aria-hidden="true"></div>
+      <h1 id="hero-title" class="hx-title">
+        <span class="l"><i><span class="faint">Every agency says yes.</span></i></span>
+        <span class="l"><i>We say <span class="red">no</span><span class="dot">.</span></i></span>
+      </h1>
 
-  <div class="container-hoe hero-inner text-center">
-    <p class="hero-kicker" data-aos="fade-up">
-      Real estate lead generation agency · Noida, since 2014
-    </p>
-
-    <h1 id="hero-title" class="hero-title" data-aos="fade-up" data-aos-delay="80">
-      We only take projects<br class="d-none d-md-inline" /> we can <span class="highlight">deliver.</span>
-    </h1>
-
-    <p class="hero-sub" data-aos="fade-up" data-aos-delay="160">
-      Before you pay, we tell you honestly if your project can get qualified leads. Up to 60% are qualified, written into
-      your contract, and we refund every qualified lead we miss.
-    </p>
-
-    <div class="d-flex flex-wrap justify-content-center gap-3 mt-4" data-aos="fade-up" data-aos-delay="240">
-      <a href={links.contact} class="btn-pill btn-grad lg">Book a free project review <i class="bi bi-arrow-right"></i></a>
-      <a href={links.caseStudies} class="btn-pill btn-glass lg">See case studies <i class="bi bi-play-fill"></i></a>
-    </div>
-
-    <!-- Live lead card: one lit card on the dark field, cycling through new leads -->
-    <div class="lead-wrap" data-aos="fade-up" data-aos-delay="340">
-      <div class="lead-card" data-lead-card data-feed={JSON.stringify(leadFeed)} aria-hidden="true">
-        <span class="lead-app">AAJ</span>
-        <span class="lead-body">
-          <b data-lead-title>New lead in your CRM</b>
-          <span data-lead-text>{leadFeed[0].n} · {leadFeed[0].d}</span>
-        </span>
-        <span class="lead-time">now</span>
+      <div class="hx-under">
+        <p class="hx-say hx-fade hx-f2">
+          Before you pay us, we tell you <span class="q">honestly</span> whether your project can get qualified leads.
+        </p>
+        <div>
+          <p class="hx-support hx-fade hx-f2">
+            If the pricing, the location or the inventory will not sell, we say so and we turn the project down.
+            If we take it, <b>up to 60% qualified leads goes into your contract</b>, and we refund every qualified
+            lead we miss. That is the whole offer. There is nothing else to read.
+          </p>
+          <div class="hx-cta hx-fade hx-f3">
+            <a href={links.contact} class="hx-btn hx-btn-solid">Ask us if your project will work <span class="ar">→</span></a>
+            <a href={links.caseStudies} class="hx-btn hx-btn-line">See the work</a>
+          </div>
+        </div>
       </div>
+
+      <div class="hx-band">
+        <figure>
+          <img src="/images/hero-team.webp" alt="The AAJneeti Connect team at the Noida office" width="2048" height="1224" fetchpriority="high" />
+        </figure>
+        <div class="hx-cap hx-fade hx-f4">
+          <span class="num">NOIDA, SEC 63</span>
+          <span>The people who will tell you. Campaigns are run in house, never outsourced, and the same team answers when you call.</span>
+        </div>
+      </div>
+
+      <div class="hx-terms hx-fade hx-f4">
+        <div class="hx-figure-big">
+          <span class="nm">60<b>%</b></span>
+          <div class="lb">of the leads we deliver are <span>qualified</span>, up to, and the number is not a claim on this page. It is a line in your agreement.</div>
+        </div>
+
+        <div class="hx-clause">
+          <span class="tag">From the agreement every client signs</span>
+          <p class="body">
+            If we fall short of the qualified lead commitment, we replace the shortfall.
+            Where we cannot replace it, we refund it, in writing.
+          </p>
+          <div class="src">Agreed before the first rupee is invoiced, not after a campaign goes wrong.</div>
+        </div>
+      </div>
+
+      <!-- How it works: 4 step cards under the 60% block -->
+      <ol class="hx-steps hx-fade hx-f4" aria-label="How it works">
+        {steps.map((s, i) => (
+          <li class:list={['hx-step', { 'is-active': i === 1 }]}>
+            <span class="i">{String(i + 1).padStart(2, '0')}</span>
+            <span class="t">{s}</span>
+          </li>
+        ))}
+      </ol>
     </div>
-
-    <ul class="hero-proofs list-unstyled" data-aos="fade-up" data-aos-delay="400">
-      {proofs.map((p) => <li><i class={`bi ${p.icon}`}></i>{p.text}</li>)}
-      <li><span class="stars" role="img" aria-label="4.5 out of 5 stars"><span aria-hidden="true">★★★★</span><span class="star-half" aria-hidden="true">★</span></span>Rated 4.5+ on Google</li>
-    </ul>
   </div>
-
 </section>
 
 <style>
-  .hero {
-    position: relative;
+  .hx {
+    /* Palette from index.html, scoped so the site-wide --red etc. are untouched */
+    --black: #08090C;
+    --white: #F4F5F7;
+    --dim: #8A90A0;
+    --red: #E01735;
+    --hair: rgba(255,255,255,.13);
+
+    background: var(--black); color: var(--white);
+    font-family: 'Archivo', system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-weight: 400; line-height: normal; letter-spacing: normal;
+    -webkit-font-smoothing: antialiased;
+    font-variant-numeric: tabular-nums;
+    padding-top: var(--header-h); /* room for the fixed site header */
+  }
+  .hx a { text-decoration: none; color: inherit; }
+  .hx-wrap { max-width: 1460px; margin: 0 auto; padding: 0 clamp(20px,3.4vw,54px); }
+
+  /* ---------- HEADLINE ---------- */
+  .hx-lede { padding: clamp(56px,9vw,124px) 0 clamp(40px,5vw,64px); }
+  /* Trust bar (replaces the old meta line) */
+  .hx-proofs {
+    list-style: none; margin: 0; padding: 0;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 10px clamp(20px,2.6vw,36px);
+    font-size: clamp(14px,1.1vw,16px); font-weight: 500; color: rgb(255 255 255 / .92);
+  }
+  .hx-proofs li { display: inline-flex; align-items: center; gap: 8px; }
+  .hx-proofs i { color: var(--red); font-size: 1.05em; }
+  .hx-proofs .stars { color: #fbbf24; letter-spacing: 1px; --star-on: #fbbf24; --star-off: rgb(255 255 255 / .25); }
+
+  .hx-title {
+    margin: clamp(26px,3.4vw,46px) 0 0;
+    font-family: inherit; color: inherit;
+    font-size: clamp(44px,8.6vw,132px); line-height: .88; letter-spacing: -.045em; font-weight: 800;
+  }
+  .hx-title .l { display: block; overflow: hidden; padding-bottom: .04em; }
+  .hx-title .l i { display: block; font-style: normal; transform: translateY(102%); animation: hx-rise 1.1s cubic-bezier(.16,1,.3,1) forwards; }
+  .hx-title .l:nth-child(1) i { animation-delay: .1s; }
+  .hx-title .l:nth-child(2) i { animation-delay: .2s; }
+  .hx-title .faint { color: var(--dim); font-weight: 500; letter-spacing: -.035em; }
+  .hx-title .red { color: var(--red); }
+  .hx-title .dot { color: var(--red); }
+  @keyframes hx-rise { to { transform: translateY(0); } }
+
+  .hx-under {
+    margin-top: clamp(34px,4vw,54px); display: grid; grid-template-columns: 1.05fr .95fr;
+    gap: clamp(24px,4vw,70px); align-items: start;
+    border-top: 1px solid var(--hair); padding-top: clamp(24px,2.6vw,34px);
+  }
+  .hx-say { margin: 0; font-size: clamp(17px,1.7vw,23px); line-height: 1.45; font-weight: 500; letter-spacing: -.015em; max-width: 24ch; }
+  .hx-say .q { color: var(--red); font-weight: 700; }
+  .hx-support { margin: 0; font-size: clamp(14.5px,1.15vw,16.5px); line-height: 1.65; color: var(--dim); max-width: 52ch; font-weight: 400; }
+  .hx-support b { color: var(--white); font-weight: 600; }
+
+  .hx-cta { margin-top: 30px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .hx-btn {
+    display: inline-flex; align-items: center; gap: 12px; cursor: pointer; border: none; font-family: inherit;
+    font-size: 15px; font-weight: 700; letter-spacing: -.01em; padding: 17px 28px; border-radius: 2px;
+    transition: background .2s ease, color .2s ease, transform .2s ease, border-color .2s ease;
+  }
+  .hx .hx-btn-solid { background: var(--red); color: #fff; }
+  .hx .hx-btn-solid:hover { background: #fff; color: var(--black); transform: translateY(-2px); }
+  .hx .hx-btn-line { background: transparent; color: var(--white); border: 1px solid var(--hair); }
+  .hx .hx-btn-line:hover { color: var(--white); border-color: var(--white); transform: translateY(-2px); }
+  .hx-btn .ar { transition: transform .2s ease; }
+  .hx-btn:hover .ar { transform: translateX(5px); }
+
+  /* ---------- PHOTO BAND ---------- */
+  .hx-band { position: relative; margin-top: clamp(44px,5vw,70px); }
+  .hx-band figure {
+    position: relative; width: 100vw; margin: 0 0 0 calc(50% - 50vw);
+    border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair);
     overflow: hidden;
-    isolation: isolate;
-    padding-top: clamp(8rem, 11vw, 9.5rem);
-    /* Full-screen hero (same height as before); smaller content is centred inside it */
-    min-height: 100vh;
-    min-height: 100svh;
-    display: flex;
-    flex-direction: column;
-    background: #091023; /* HOE hero edge colour */
-    color: var(--slate-50);
+    clip-path: inset(0 0 100% 0);
+    animation: hx-wipe 1.3s cubic-bezier(.16,1,.3,1) .5s forwards;
+  }
+  @keyframes hx-wipe { to { clip-path: inset(0 0 0 0); } }
+  .hx-band img {
+    display: block; width: 100%; max-width: none; height: clamp(240px,34vw,420px); object-fit: cover; object-position: center 60%;
+    filter: grayscale(.55) contrast(1.08) brightness(.92);
+    transform: scale(1.02); transition: filter 1.6s ease, transform 12s ease;
+  }
+  .hx-band figure:hover img { filter: grayscale(0) contrast(1.04) brightness(1); transform: scale(1.06); }
+  .hx-band figure::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(90deg,rgba(8,9,12,.72),transparent 26%,transparent 74%,rgba(8,9,12,.72)),
+                linear-gradient(to top,rgba(8,9,12,.55),transparent 42%);
+  }
+  .hx-cap {
+    display: flex; gap: 16px; align-items: baseline; padding-top: 16px;
+    font-size: 12.5px; font-weight: 500; color: var(--dim); letter-spacing: .01em;
+  }
+  .hx-cap .num { color: var(--red); font-weight: 700; letter-spacing: .1em; font-size: 11px; }
+
+  /* ---------- TERMS ---------- */
+  .hx-terms {
+    margin-top: clamp(44px,5vw,78px); border-top: 1px solid var(--hair);
+    padding-top: clamp(30px,3.4vw,48px); padding-bottom: clamp(32px,3.6vw,52px);
+    display: grid; grid-template-columns: auto 1fr; gap: clamp(28px,5vw,78px); align-items: center;
+  }
+  .hx-figure-big { flex: none; max-width: min(470px,42vw); }
+  .hx-figure-big .nm {
+    font-size: clamp(96px,14.5vw,210px); line-height: .82; font-weight: 800; letter-spacing: -.06em;
+    color: transparent; -webkit-text-stroke: 2px rgba(244,245,247,.34);
+    display: block; white-space: nowrap;
+  }
+  .hx-figure-big .nm b { -webkit-text-stroke: 2px var(--red); font-weight: 800; }
+  .hx-figure-big .lb {
+    margin-top: 18px; max-width: 34ch; font-size: 13px; line-height: 1.6; color: var(--dim);
+    font-weight: 500; letter-spacing: .01em;
+  }
+  .hx-figure-big .lb span { color: var(--white); font-weight: 600; }
+
+  .hx-clause { border-left: 2px solid var(--red); padding-left: clamp(18px,2vw,28px); }
+  .hx-clause .tag {
+    font-size: 11px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--red);
+  }
+  .hx-clause .body {
+    margin: 14px 0 0; font-size: clamp(17px,1.85vw,26px); line-height: 1.38; font-weight: 500; letter-spacing: -.02em;
+    max-width: 40ch;
+  }
+  .hx-clause .src { margin-top: 14px; font-size: 12.5px; color: var(--dim); font-weight: 500; }
+
+  /* ---------- STEPS (strip cards) ---------- */
+  .hx-steps {
+    --gap: 16px; --dot: 36px;
+    list-style: none; margin: 0; padding: clamp(4px,.6vw,8px) 0 0;
+    display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: var(--gap);
+  }
+  .hx-step {
+    position: relative; display: flex; align-items: center; gap: 14px;
+    padding: 14px 18px;
+    background: #121318; border: 1px solid rgba(255,255,255,.08); border-radius: 10px;
+    transition: border-color .25s ease, background .25s ease, transform .25s ease;
+  }
+  /* hairline connector between neighbouring strips, through their centre line */
+  .hx-step + .hx-step::before {
+    content: ""; position: absolute; right: 100%; top: 50%; width: var(--gap); height: 1px;
+    background: var(--hair);
+  }
+  .hx-step.is-active, .hx-step:hover { border-color: var(--red); background: #15161c; }
+  .hx-step:hover { transform: translateY(-2px); }
+  .hx-step .i {
+    flex: none; display: grid; place-items: center; width: var(--dot); height: var(--dot); border-radius: 50%;
+    border: 1.5px solid var(--red); color: var(--red);
+    font-size: 13px; font-weight: 700; letter-spacing: -.01em;
+  }
+  .hx-step .t {
+    min-width: 0; font-size: clamp(14.5px,1.15vw,16.5px); line-height: 1.3; font-weight: 600; letter-spacing: -.015em;
+    color: var(--white);
   }
 
-  /* HOE hero backdrop, reproduced from houseofeducation.com's hero image.
-     Measured against an 11×11 colour grid of their image (person excluded): mean ΔRGB 6.5.
-     Dark navy top and left third, light building toward lower centre-right, soft lift bottom-right. */
-  .hero-light {
-    position: absolute; inset: 0; z-index: -2; pointer-events: none;
-    background:
-      radial-gradient(ellipse 30% 45% at 92% 100%, rgb(60 69 82 / .9) 0%, rgb(60 69 82 / 0) 100%),
-      radial-gradient(ellipse 70% 95% at 62% 72%,
-        #444d5b 0%,
-        #3d4657 18%,
-        #313a4b 33%,
-        #222a3c 50%,
-        #151c2f 68%,
-        #0c1326 84%,
-        #091023 100%);
+
+  .hx-fade { opacity: 0; animation: hx-fi .9s ease forwards; }
+  .hx-f1 { animation-delay: .45s; } .hx-f2 { animation-delay: .6s; } .hx-f3 { animation-delay: .75s; } .hx-f4 { animation-delay: 1.5s; }
+  @keyframes hx-fi { to { opacity: 1; } }
+
+  @media (max-width: 900px) {
+    .hx-under { grid-template-columns: 1fr; gap: 22px; }
+    .hx-say { max-width: 100%; }
+    .hx-terms { grid-template-columns: 1fr; gap: 26px; }
+    .hx-figure-big .nm { font-size: clamp(84px,24vw,150px); }
+    .hx-steps { grid-template-columns: repeat(2, minmax(0,1fr)); --gap: 12px; }
+    .hx-step + .hx-step::before { display: none; }
   }
-  .hero::after { content: none; } /* no fade: hero ends on the HOE gradient, light section follows */
-
-  .hero-inner {
-    position: relative; max-width: 62rem; width: 100%;
-    flex: 1 0 auto;
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
+  @media (max-width: 520px) {
+    .hx-steps { grid-template-columns: 1fr; --gap: 10px; }
+    .hx-proofs { gap: 8px 16px; font-size: 13px; }
   }
-
-  .hero-kicker {
-    display: inline-flex; align-items: center; gap: .6rem;
-    font-size: .85rem; font-weight: 500; color: var(--slate-200);
-    padding: .45rem 1.1rem; border-radius: 999px;
-    background: rgb(255 255 255 / .08); border: 1px solid rgb(255 255 255 / .12);
-    margin-bottom: 1.25rem;
+  @media (max-width: 700px) {
+    .hx-btn { flex: 1; justify-content: center; padding: 16px 18px; }
+    .hx-cap { flex-direction: column; gap: 6px; }
   }
-
-  .hero-title {
-    font-size: clamp(2.2rem, 4.4vw, 3.75rem);
-    line-height: 1.08;
-    letter-spacing: -0.04em;
-    color: #fff;
-    margin: 0 auto;
-  }
-  .hero-sub {
-    max-width: 46rem; margin: 1.25rem auto 0;
-    font-weight: 300; font-size: clamp(1rem, 1.3vw, 1.15rem); line-height: 1.6;
-    color: var(--slate-300);
-  }
-
-  /* Glass secondary button (the reference's "Watch demo") */
-  .btn-glass {
-    color: #fff;
-    background: rgb(255 255 255 / .1);
-    border-color: rgb(255 255 255 / .28);
-  }
-  .btn-glass:hover { color: var(--navy); background: #fff; border-color: #fff; }
-
-
-  .hero-proofs {
-    display: flex; flex-wrap: wrap; justify-content: center; gap: .6rem 1.75rem;
-    margin: 1.25rem 0 0; font-size: .88rem; font-weight: 500; color: rgb(255 255 255 / .9);
-  }
-  .hero-proofs li { display: inline-flex; align-items: center; gap: .45rem; }
-  .hero-proofs i { color: var(--brand-bright); }
-  .stars { color: #fbbf24; letter-spacing: 1px; --star-on: #fbbf24; --star-off: rgb(255 255 255 / .25); }
-
-  /* Live lead card */
-  .lead-wrap { margin-top: 1.75rem; width: 100%; display: flex; justify-content: center; }
-  .lead-card {
-    display: flex; align-items: center; gap: 12px; width: min(100%, 26rem);
-    padding: 10px 14px; border-radius: var(--radius); text-align: left;
-    font-family: var(--font-body);
-    background: rgb(255 255 255 / .06); border: 1px solid rgb(255 255 255 / .12); color: #fff;
-  }
-  .lead-card.is-in { animation: leadIn .6s cubic-bezier(.16, 1, .3, 1); }
-  @keyframes leadIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
-  .lead-app { flex: none; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 8px; background: var(--brand); font-family: var(--font-display); font-size: 10px; font-weight: 600; color: #fff; }
-  .lead-body { display: flex; flex: 1; flex-direction: column; min-width: 0; line-height: 1.35; }
-  .lead-body b { font-family: var(--font-display); font-size: .85rem; font-weight: 500; white-space: nowrap; }
-  .lead-body span { overflow: hidden; font-size: .82rem; color: var(--slate-300); text-overflow: ellipsis; white-space: nowrap; }
-  .lead-time { flex: none; align-self: flex-start; font-size: .72rem; color: var(--slate-400); }
-
-
-  @media (max-width: 767.98px) {
-    .hero-proofs { gap: .5rem 1.1rem; font-size: .8rem; }
-    .btn-pill.lg { width: 100%; }
+  @media (prefers-reduced-motion: reduce) {
+    .hx *, .hx *::before, .hx *::after { animation: none !important; transition: none !important; }
+    .hx-title .l i { transform: none; }
+    .hx-band figure { clip-path: none; }
+    .hx-fade { opacity: 1; }
   }
 </style>
-
-<script>
-  // Cycle the lead card every 3.2s (as on aajneeti.social); pause when off-screen or tab hidden.
-  const card = document.querySelector<HTMLElement>('[data-lead-card]');
-  const feed: { n: string; d: string }[] = card ? JSON.parse(card.dataset.feed ?? '[]') : [];
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (card && feed.length > 1 && !reduce) {
-    const title = card.querySelector<HTMLElement>('[data-lead-title]');
-    const text = card.querySelector<HTMLElement>('[data-lead-text]');
-    let i = 0;
-    let timer = 0;
-    let visible = true;
-    const next = () => {
-      i = (i + 1) % feed.length;
-      if (title) title.textContent = 'New qualified lead';
-      if (text) text.textContent = `${feed[i].n} · ${feed[i].d}`;
-      card.classList.remove('is-in');
-      void card.offsetWidth; // restart the entry animation
-      card.classList.add('is-in');
-    };
-    const start = () => { if (!timer && visible && !document.hidden) timer = window.setInterval(next, 3200); };
-    const stop = () => { window.clearInterval(timer); timer = 0; };
-    new IntersectionObserver((e) => { visible = e[0].isIntersecting; if (visible) start(); else stop(); }).observe(card);
-    document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
-  }
-</script>

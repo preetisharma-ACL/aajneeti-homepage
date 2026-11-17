@@ -32,7 +32,7 @@ const {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Poppins:wght@500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=BIZ+UDPGothic:wght@700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Poppins:wght@500;600;700&display=swap"
       rel="stylesheet"
     />
     <!-- Hide reveal targets before first paint (only when JS runs and motion is allowed) -->
@@ -54,7 +54,12 @@ const {
 
       // Header: transparent over the dark hero, solid white once scrolled (HOE behaviour)
       const header = document.querySelector<HTMLElement>('[data-site-header]');
-      const onScroll = () => header?.setAttribute('data-scrolled', String(window.scrollY > 40));
+      // Writes only when the state flips (not on every scroll event), so scrolling doesn't restyle the header.
+      let scrolled: boolean | null = null;
+      const onScroll = () => {
+        const s = window.scrollY > 40;
+        if (s !== scrolled) { scrolled = s; header?.setAttribute('data-scrolled', String(s)); }
+      };
       onScroll();
       window.addEventListener('scroll', onScroll, { passive: true });
     </script>

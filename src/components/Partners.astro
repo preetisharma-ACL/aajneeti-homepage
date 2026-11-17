@@ -15,8 +15,9 @@ interface Props {
 }
 const { id, eyebrow, title, titleHl, sub, logos, direction = 'left', variant = 'plain', second } = Astro.props;
 
-// Repeat each list so its row always overflows wide screens; the loop moves by exactly one copy.
-const copiesFor = (list: Logo[]) => Math.max(4, Math.ceil(16 / list.length));
+// Repeat each list just enough to cover a 2560px screen plus the one copy the loop moves by
+// (largest tile is ~214px wide incl. margin). Fewer copies = fewer images to decode and composite.
+const copiesFor = (list: Logo[]) => Math.max(2, Math.ceil(2560 / (list.length * 214)) + 1);
 const rows = [
   { logos, direction, copies: copiesFor(logos) },
   ...(second ? [{ logos: second.logos, direction: second.direction ?? 'right', copies: copiesFor(second.logos) }] : []),
@@ -46,7 +47,7 @@ const rows = [
           {Array.from({ length: row.copies }).flatMap((_, copy) =>
             row.logos.map((b) => (
               <li class="partner-tile" aria-hidden={copy > 0 ? 'true' : undefined}>
-                <img class="partner-logo" src={b.src} alt={copy === 0 ? b.name : ''} loading="lazy" />
+                <img class="partner-logo" src={b.src} alt={copy === 0 ? b.name : ''} loading="lazy" decoding="async" width="200" height="100" />
               </li>
             ))
           )}
@@ -55,6 +56,17 @@ const rows = [
     </>
   ))}
 </section>
+
+<script>
+  // Marquees only run while on screen (and while the tab is visible): off-screen rows are paused.
+  const rows = [...document.querySelectorAll<HTMLElement>('.p-row')];
+  if (rows.length && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) e.target.classList.toggle('is-paused', !e.isIntersecting);
+    });
+    rows.forEach((r) => { r.classList.add('is-paused'); io.observe(r); });
+  }
+</script>
 
 <style>
   .partners { position: relative; overflow: hidden; isolation: isolate; padding-block: clamp(3.5rem, 6vw, 4.5rem); }
@@ -82,15 +94,17 @@ const rows = [
   /* One row, endless */
   .p-row {
     overflow: hidden;
+    overflow: clip; /* clips without making the row a scroll container (no extra scrolling layer) */
     -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
     mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   }
-  .p-track { display: flex; width: max-content; margin: 0; padding: .35rem 0; will-change: transform; animation: p-left calc(var(--n, 4) * 10s) linear infinite; } /* 10s per logo = same speed on every row */
+  .p-track { display: flex; width: max-content; margin: 0; padding: .35rem 0; animation: p-left calc(var(--n, 4) * 10s) linear infinite; } /* 10s per logo = same speed on every row */
   .p-row--left .p-track { animation-name: p-left; }
   .p-row--right .p-track { animation-name: p-right; }
   @keyframes p-left { from { transform: translateX(0); } to { transform: translateX(calc(-100% / var(--copies))); } }
   @keyframes p-right { from { transform: translateX(calc(-100% / var(--copies))); } to { transform: translateX(0); } }
-  .p-row:hover .p-track { animation-play-state: paused; }
+  .p-row:hover .p-track,
+  .p-row.is-paused .p-track { animation-play-state: paused; }
 
   /* Smaller logo boxes; margin (not gap) keeps each copy an exact fraction of the track */
   .partner-tile {

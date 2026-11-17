@@ -103,18 +103,26 @@ const cards = [
   const current = cards.map(() => 0);
   let raf = 0;
 
-  const target = (i: number) => {
-    const next = cards[i + 1];
-    if (!mq.matches || reduce || !next) return 0;
-    const pinTop = parseFloat(getComputedStyle(cards[i]).top) || 0;
-    const dist = next.getBoundingClientRect().top - pinTop;
-    return Math.min(1, Math.max(0, 1 - dist / cards[i].offsetHeight));
+  // Card sizes and pin offsets only change on resize, so measure them then, not every frame.
+  let pinTops: number[] = [];
+  let heights: number[] = [];
+  const measure = () => {
+    pinTops = cards.map((c) => parseFloat(getComputedStyle(c).top) || 0);
+    heights = cards.map((c) => c.offsetHeight);
   };
 
   const frame = () => {
+    const active = mq.matches && !reduce;
+    // 1) Reads (all layout reads together, before any style writes)
+    const targets = cards.map((_, i) => {
+      const next = cards[i + 1];
+      if (!active || !next) return 0;
+      const dist = next.getBoundingClientRect().top - pinTops[i];
+      return Math.min(1, Math.max(0, 1 - dist / (heights[i] || 1)));
+    });
+    // 2) Writes (transform + opacity only: no layout)
     let moving = false;
-    cards.forEach((_, i) => {
-      const t = target(i);
+    targets.forEach((t, i) => {
       const d = t - current[i];
       current[i] = Math.abs(d) < 0.001 ? t : current[i] + d * 0.16;
       if (current[i] !== t) moving = true;
@@ -125,9 +133,17 @@ const cards = [
     raf = moving ? requestAnimationFrame(frame) : 0;
   };
   const kick = () => { if (!raf) raf = requestAnimationFrame(frame); };
-  window.addEventListener('scroll', kick, { passive: true });
-  window.addEventListener('resize', kick);
-  kick();
+
+  if (root && cards.length > 1) {
+    measure();
+    // Listen to scroll only while the stack is on screen
+    let on = false;
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !on) { on = true; window.addEventListener('scroll', kick, { passive: true }); kick(); }
+      else if (!e.isIntersecting && on) { on = false; window.removeEventListener('scroll', kick); kick(); }
+    }).observe(root);
+    window.addEventListener('resize', () => { measure(); kick(); }, { passive: true });
+  }
 </script>
 
 <style>
@@ -143,12 +159,12 @@ const cards = [
     border-top: 1px solid rgb(255 255 255 / .14); /* separator above each card */
     padding-block: clamp(1.5rem, 3vw, 2.5rem);
     transform-origin: center top;
-    will-change: transform, opacity;
   }
   .stack { display: flex; flex-direction: column; gap: 1.5rem; }
   @media (min-width: 992px) and (min-height: 700px) {
     .stack { gap: 2rem; padding-bottom: 0; }
     .stack-card { position: sticky; top: calc(var(--header-h) + 1rem); }
+    .stack-inner { will-change: transform, opacity; } /* only where the stacking effect runs (desktop) */
   }
 
   /* Premium frame: thin coral→slate gradient edge + soft warm glow */
